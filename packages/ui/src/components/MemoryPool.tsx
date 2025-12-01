@@ -160,10 +160,10 @@ export const MemoryPool = ({
               </div>
             ) : (
               <div
+                key={idx}
                 className={`nova-bubble transition-opacity duration-700 ${msg.role === 'nova' ? 'opacity-0 animate-fade-in' : ''}`}
               >
                 <MessageBubble
-                  key={idx}
                   role={msg.role}
                   content={msg.content}
                   layer={msg.layer}
