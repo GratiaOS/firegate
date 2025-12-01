@@ -7,7 +7,6 @@ export interface SeedPortalProps {
   sendMessage: () => void;
   activeSuggestion: string | null;
   setActiveSuggestion: React.Dispatch<React.SetStateAction<string | null>>;
-  setSuggestionUsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const placeholderWhispers = [

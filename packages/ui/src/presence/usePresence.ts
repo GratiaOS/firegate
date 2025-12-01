@@ -24,7 +24,7 @@ export function usePresence({
   const [othersCount, setOthersCount] = useState(0);
 
   const supabaseRef = useRef(createSupabaseBrowserClient());
-  const sessionIdRef = useRef<string>();
+  const sessionIdRef = useRef<string | undefined>(undefined);
   const lastActivityRef = useRef<number>(Date.now());
   const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
