@@ -7,6 +7,7 @@
     "checkJs": false,
     "jsx": "react-jsx",
     "baseUrl": ".",
+    "moduleResolution": "Bundler",
     "paths": {
       "@shared/*": ["shared/src/*"],
       "@features/*": ["packages/ui/src/features/*"],
