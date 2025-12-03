@@ -1,0 +1,15 @@
+{
+  "event": {
+    "id": "DOG_IN_RAIN_2025_12_03",
+    "trigger": "SENSORY",
+    "sourceTerritory": "GUARDIANS",
+    "sceneDescription": "Câine ud, tremurând, la poarta casei în ploaie.",
+    "context": {
+      "timestamp": "2025-12-03T17:30:00+01:00",
+      "location": "Bastaras / Driveway",
+      "plusCode": "6V75+GH Casbas de Huesca",
+      "actors": ["Raz", "S", "Dog:Hunter"],
+      "tags": ["weather:rain", "animal:dog", "help"]
+    }
+  }
+}
