@@ -46,6 +46,12 @@ export default [
     rules: tsRules,
   },
   {
+    plugins: { '@typescript-eslint': typescript },
+    files: ['packages/kernel/**/*.{ts,tsx,js,jsx}'],
+    languageOptions: tsLanguageOptions,
+    rules: tsRules,
+  },
+  {
     files: ['packages/ui/vite.config.js'],
     languageOptions: {
       globals: {
