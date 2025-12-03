@@ -811,6 +811,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.9.tgz#50dea3616bc8191fb8e112283b49eaff03e78429"
   integrity sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==
 
+"@gratiaos/icons@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@gratiaos/icons/-/icons-1.0.4.tgz#160792896f14b2c484b60df5fbc18750c646dcb6"
+  integrity sha512-gR1wXCGwzGt4Z4IsA6U4kUl0uVoWhhLQRv/vw5ecQrnCvKJdHtsmSCF0qxMSn1iheGh2aPPtTQbY1trHA9EAZA==
+
 "@grpc/grpc-js@~1.9.0":
   version "1.9.15"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.9.15.tgz#433d7ac19b1754af690ea650ab72190bd700739b"
