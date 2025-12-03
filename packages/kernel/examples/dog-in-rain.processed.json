@@ -1,0 +1,157 @@
+{
+  "version": "1.0.0",
+  "event": {
+    "id": "DOG_IN_RAIN_2025_12_03",
+    "trigger": "SENSORY",
+    "sourceTerritory": "GUARDIANS",
+    "sceneDescription": "Câine ud, tremurând, la poarta casei în ploaie.",
+    "context": {
+      "timestamp": "2025-12-03T17:30:00+01:00",
+      "location": "Bastaras / Driveway",
+      "plusCode": "6V75+GH Casbas de Huesca",
+      "actors": ["Raz", "S", "Dog:Hunter"],
+      "tags": ["weather:rain", "animal:dog", "help"]
+    },
+    "processingStatus": [
+      "L1_CAPTURED",
+      "L2_FELT",
+      "L3_MAPPED",
+      "L4_ARCH_TYPED",
+      "L5_TRANSGEN_CHECK",
+      "L6_FIELD_APPLIED",
+      "L7_RULE_WRITTEN"
+    ]
+  },
+  "layerStates": [
+    {
+      "layer": "L1_LOCAL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Câine ud, tremurând, în ploaie, la intrarea în City of Cats.",
+      "data": {
+        "sensations": ["rece", "umezeală", "vânt", "tremurat"],
+        "actions": ["ieșit din casă", "evaluat starea câinelui", "dat de mâncare"]
+      }
+    },
+    {
+      "layer": "L2_EMOTIONAL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Compasiune puternică, tristețe și grijă pentru un suflet rătăcit.",
+      "data": {
+        "feelings": ["compasiune", "tristețe blândă", "grijă", "responsabilitate"],
+        "intensity": 7
+      }
+    },
+    {
+      "layer": "L3_MENTAL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Se ia decizia clară: \"Nu-l lăsăm așa, chemăm ajutor.\"",
+      "data": {
+        "thoughts": [
+          "Nu e ok să stea așa în ploaie.",
+          "Trebuie să aflăm dacă are stăpân.",
+          "La noi în City of Cats nu lăsăm pe nimeni în urmă."
+        ],
+        "decisions": ["hrănește câinele", "sună stăpânul", "asigură adăpost temporar"]
+      }
+    },
+    {
+      "layer": "L4_ARCHETYPAL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Scena activează arhetipul \"Copil rătăcit\" și \"Gardianul porții\".",
+      "data": {
+        "symbols": ["copil_pierdut", "gardian", "poartă", "acasă"],
+        "roles": ["Protectorul", "Cel_rătăcit", "Chemarea_acasă"]
+      }
+    },
+    {
+      "layer": "L5_TRANSGENERATIONAL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Se rescrie pattern-ul vechi \"cine e în furtună rămâne singur\".",
+      "data": {
+        "patternDetected": "abandon_in_crisis",
+        "actionTaken": "pattern_rescripted_prin_ajutor_direct"
+      }
+    },
+    {
+      "layer": "L6_FIELD",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "După ajutor, câmpul casei se liniștește, animalele se calmează.",
+      "data": {
+        "vibe": "CALM",
+        "fieldShift": "de_la_grijă_tensionată_la_căldură_si_liniște",
+        "guardianSignals": [
+          "câinele încetează să mai tremure",
+          "spațiul de la intrare se simte mai ușor",
+          "pisicile revin la comportament normal"
+        ]
+      }
+    },
+    {
+      "layer": "L7_KERNEL",
+      "eventId": "DOG_IN_RAIN_2025_12_03",
+      "summary": "Kernelul creează o nouă regulă de sistem: nimeni nu rămâne singur în furtună.",
+      "data": {
+        "rulesApplied": [],
+        "newRules": [
+          {
+            "ruleId": "RULE_07_NO_ONE_LEFT_IN_RAIN",
+            "description": "În acest sistem, orice ființă găsită singură într-o ‘furtună’ (metaforică sau reală) este ajutată, hrănită și ghidată spre adăpost.",
+            "createdFromEventId": "DOG_IN_RAIN_2025_12_03",
+            "antecedent": "sceneDescription CONȚINE 'rătăcit' OR 'ploaie' OR 'singur_afara'",
+            "consequent": "Activează ROOTS (decizie de ajutor), WATER (validare emoțională, grijă), GUARDIANS (observare), ARK (documentarea scenei).",
+            "layersAffected": [
+              "L1_LOCAL",
+              "L2_EMOTIONAL",
+              "L3_MENTAL",
+              "L5_TRANSGENERATIONAL",
+              "L6_FIELD",
+              "L7_KERNEL"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "rules": [
+    {
+      "ruleId": "RULE_07_NO_ONE_LEFT_IN_RAIN",
+      "description": "În acest sistem, orice ființă găsită singură într-o ‘furtună’ (metaforică sau reală) este ajutată, hrănită și ghidată spre adăpost.",
+      "createdFromEventId": "DOG_IN_RAIN_2025_12_03",
+      "antecedent": "sceneDescription CONȚINE 'rătăcit' OR 'ploaie' OR 'singur_afara'",
+      "consequent": "Activează ROOTS (decizie de ajutor), WATER (validare emoțională), LIGHTNING (acțiune rapidă), GUARDIANS (monitorizare) și ARK (log al scenei).",
+      "layersAffected": [
+        "L1_LOCAL",
+        "L2_EMOTIONAL",
+        "L3_MENTAL",
+        "L4_ARCHETYPAL",
+        "L5_TRANSGENERATIONAL",
+        "L6_FIELD",
+        "L7_KERNEL"
+      ]
+    }
+  ],
+  "fieldSnapshots": [
+    {
+      "timestamp": "2025-12-03T17:20:00+01:00",
+      "vibe": "TENSION",
+      "activePatterns": ["grijă_neformulată", "posibil_abandon"],
+      "guardianSignals": [
+        {
+          "module": "GUARDIANS",
+          "signal": "câinele apare la poartă, agitat, ud, tremurând"
+        }
+      ]
+    },
+    {
+      "timestamp": "2025-12-03T17:40:00+01:00",
+      "vibe": "CALM",
+      "activePatterns": ["grijă_exprimată_prin_acțiune", "protecție_activă"],
+      "guardianSignals": [
+        {
+          "module": "GUARDIANS",
+          "signal": "câinele e mai liniștit, ploaia e 'mai blândă' în percepție"
+        }
+      ]
+    }
+  ]
+}
