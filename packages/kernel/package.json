@@ -1,0 +1,20 @@
+{
+  "name": "@gratia/kernel",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Gratia Emotional Kernel types and config (City of Cats OS)",
+  "exports": {
+    "./types": "./dist/types.js",
+    "./config": "./dist/config.js",
+    "./package.json": "./package.json",
+    ".": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
