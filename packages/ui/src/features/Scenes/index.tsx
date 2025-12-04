@@ -1,6 +1,7 @@
 import React from 'react';
 import { DogInRainCard } from '@/components/scenes/DogInRainCard';
 import { LightningApprenticeshipCard } from '@/components/scenes/LightningApprenticeshipCard';
+import SeedKeyCard from '@/components/scenes/SeedKeyCard';
 
 export default function Scenes() {
   return (
@@ -17,6 +18,7 @@ export default function Scenes() {
       <div className="grid gap-8 w-full max-w-5xl">
         <DogInRainCard />
         <LightningApprenticeshipCard />
+        <SeedKeyCard />
       </div>
     </div>
   );
