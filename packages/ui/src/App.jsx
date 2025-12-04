@@ -8,6 +8,7 @@ import Aeolus from '@features/Aeolus';
 import TranslateUI from '@features/TranslateUI';
 import Manifesto from '@features/Manifesto';
 import Codex from '@features/Codex';
+import Scenes from '@features/Scenes';
 import { Toaster } from 'sonner';
 import { OnlineStatusProvider } from './context/OnlineStatusContext';
 import CaminoViewer from '@/features/Camino';
@@ -34,15 +35,16 @@ function App() {
             <Route path="manifesto" element={<Manifesto />} />
             <Route path="/camino" element={<CaminoViewer />} />
             <Route element={<Layout />}>
-              <Route path="/firegate" element={<Firegate />} />
-              <Route path="/aeolus" element={<Aeolus />} />
-              <Route path="/translate-ui" element={<TranslateUI />} />
-              <Route path="/codex" element={<Codex />} />
-            </Route>
-          </Routes>
-          <Toaster position="top-right" />
-        </div>
-      </LangProvider>
+            <Route path="/firegate" element={<Firegate />} />
+            <Route path="/aeolus" element={<Aeolus />} />
+            <Route path="/translate-ui" element={<TranslateUI />} />
+            <Route path="/codex" element={<Codex />} />
+            <Route path="/scenes" element={<Scenes />} />
+          </Route>
+        </Routes>
+        <Toaster position="top-right" />
+      </div>
+    </LangProvider>
     </OnlineStatusProvider>
   );
 }
