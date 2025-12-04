@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { FieldState, KernelEvent, LayerState, ReligareRule } from '@gratia/kernel';
-import processedSceneJson from '@gratia/kernel/examples/n_lightning_apprenticeship.processed.json' assert { type: 'json' };
+import processedSceneJson from '@gratia/kernel/examples/n_lightning_apprenticeship.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
 import { KernelTraceView } from './KernelTraceView';
 
