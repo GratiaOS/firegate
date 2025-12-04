@@ -1,0 +1,137 @@
+{
+  "eventId": "YOUNG_LIGHTNING_SEED_KEY_2025_12_04",
+  "timestamp": "2025-12-04T11:30:00+01:00",
+  "location": {
+    "plusCode": "6V75+GH Casbas de Huesca",
+    "context": "Coasta abruptă deasupra Grădinii, punct de observație înalt."
+  },
+  "scene": {
+    "title": "Young Lightning holds the seed key.",
+    "shortDescription": "N urcă pe costișă, se oprește în punctul cel mai înalt și ridică o cheie cu simbol de spic.",
+    "narrative": "Într-o zi senină, N urcă pe costișă până în punctul cel mai înalt. De acolo vede tot versantul și casa. În mână ține o cheie metalică pe care este gravat un simbol de spic. O ridică ușor, ca pe un totem, într-un gest calm, fără cuvinte. Gestul marchează trecerea de la simplu observator la tânăr păzitor care poartă propria cheie către următorul pas."
+  },
+  "actors": [
+    {
+      "id": "nicolas",
+      "role": "LIGHTNING_APPRENTICE",
+      "perspective": "first_person"
+    },
+    {
+      "id": "razvan",
+      "role": "ROOTS_WITNESS",
+      "perspective": "observer"
+    }
+  ],
+  "objects": [
+    {
+      "id": "seed_key",
+      "kind": "TALISMAN",
+      "symbol": "grain_cluster",
+      "description": "Cheie metalică mică, cu simbol de spic auriu – ancoră de creștere și permisiune."
+    }
+  ],
+  "tags": [
+    "young_lightning",
+    "alpha_state",
+    "high_ground",
+    "seed_key",
+    "apprenticeship",
+    "city_of_cats"
+  ],
+  "layerStack": [
+    {
+      "layerId": "L1_LOCAL",
+      "title": "Somatic / Local",
+      "description": "Corp stabil pe pantă, picioare bine înfipte în sol, privirea în față. Respirație calmă, aer rece și curat.",
+      "notes": [
+        "poziție înaltă, vedere panoramică",
+        "gest clar de ridicare a cheii"
+      ]
+    },
+    {
+      "layerId": "L2_EMOTIONAL",
+      "title": "Emoțional",
+      "description": "Calm, curiozitate și o bucurie liniștită. Abrazos-urile zilei au lăsat în câmp un portocaliu-deschis, ca vopseaua pe apă.",
+      "notes": [
+        "nici teamă, nici grabă",
+        "senzație de „e în regulă să fiu aici, sus”"
+      ]
+    },
+    {
+      "layerId": "L3_MENTAL",
+      "title": "Mental / Hartă",
+      "description": "Insight simplu: „cheia asta contează”. N simte că obiectul nu este doar de decor, ci un marker pentru un rol nou.",
+      "notes": [
+        "apare gândul că poate deschide drumuri, nu doar uși",
+        "prima schiță mentală de responsabilitate personală"
+      ]
+    },
+    {
+      "layerId": "L4_ARCHETYPAL",
+      "title": "Arhetipal",
+      "description": "Se activează imaginea tânărului păzitor pe culme, cu totem în mână. Lightning Scout cu Seed Key.",
+      "notes": [
+        "arhetipul „Young Guardian / Scout”",
+        "cheia ca simbol de permisiune, nu de control"
+      ]
+    },
+    {
+      "layerId": "L5_TRANSGENERATIONAL",
+      "title": "Transgenerațional",
+      "description": "Se rescrie subtil vechiul pattern în care doar adulții țin „cheile importante”. Aici, tânărul primește ancoră reală, în teren, validată de Roots.",
+      "notes": [
+        "din „doar adulții știu” → „putem co-purta cheile”",
+        "rol transmis prin gest, nu prin discurs"
+      ]
+    },
+    {
+      "layerId": "L6_FIELD",
+      "title": "Câmp",
+      "description": "Câmpul familiei simte o stabilizare caldă. Natura din jur rămâne liniștită; scena curge fără întreruperi, ca o confirmare tăcută.",
+      "notes": [
+        "abrazos-urile de peste zi deja au „pregătit apa”",
+        "simț de aliniere între deal, casă și poziția lui N"
+      ]
+    },
+    {
+      "layerId": "L7_KERNEL",
+      "title": "Kernel Whisper",
+      "description": "Whisper-ul se cristalizează: tânărul Lightning are permisiunea naturală de a ține cheia creșterii și de a vedea următorul pas.",
+      "whisperId": "WHISPER_YOUNG_LIGHTNING_HOLDS_SEED_KEY",
+      "whisperText": "Când un tânăr Lightning ridică o cheie cu simbol de creștere într-un loc înalt, câmpul recunoaște că el poartă permisiunea pentru următorul pas.",
+      "layersAffected": [
+        "L2_EMOTIONAL",
+        "L3_MENTAL",
+        "L4_ARCHETYPAL",
+        "L5_TRANSGENERATIONAL",
+        "L6_FIELD",
+        "L7_KERNEL"
+      ],
+      "status": "L7_WHISPER_WRITTEN"
+    }
+  ],
+  "fieldSnapshots": [
+    {
+      "phase": "before",
+      "timestamp": "2025-12-04T11:20:00+01:00",
+      "vibe": "CALM",
+      "activePatterns": [
+        "observation_mode",
+        "soft_apprenticeship"
+      ],
+      "notes": "Plimbare liniștită; N observă dealul și casa, fără accent pe rol."
+    },
+    {
+      "phase": "after",
+      "timestamp": "2025-12-04T11:35:00+01:00",
+      "vibe": "EXPANSION",
+      "activePatterns": [
+        "young_lightning_with_key",
+        "shared_guardianship"
+      ],
+      "notes": "După gest, câmpul se simte mai larg: N e văzut și simțit ca participant cu cheie proprie, nu doar însoțitor."
+    }
+  ],
+  "processingStatus": ["L7_WHISPER_WRITTEN"],
+  "nextAction": "Cultivarea momentelor în care N poate alege singur următorul pas, pornind de la propria lui cheie."
+}
