@@ -143,7 +143,7 @@ export default function Ledger() {
               placeholder="Pentru ce folosim (trip, gear, learning)?"
               className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-400 min-h-[80px]"
             />
-            <Button type="button" onClick={addEntry} variant="primary" tone="accent">
+            <Button type="button" onClick={addEntry} variant="solid" tone="accent">
               Log entry
             </Button>
           </div>

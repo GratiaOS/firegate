@@ -1,5 +1,7 @@
-@import 'tailwindcss';
 @import '@gratiaos/tokens/theme.css';
+@import 'tailwindcss';
+
+@import '@gratiaos/ui/styles/base.css' layer(components);
 
 @import './styles/animations.css';
 @import './styles/theme.css';

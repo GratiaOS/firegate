@@ -23,7 +23,7 @@ export type ProcessingStatus =
   | 'L4_ARCH_TYPED'
   | 'L5_TRANSGEN_CHECK'
   | 'L6_FIELD_APPLIED'
-  | 'L7_RULE_WRITTEN';
+  | 'L7_WHISPER_WRITTEN';
 
 // Event & context
 export interface EventContext {
@@ -104,8 +104,12 @@ export interface L6FieldState extends LayerStateBase {
 export interface L7KernelState extends LayerStateBase {
   layer: 'L7_KERNEL';
   data?: {
-    rulesApplied?: ReligareRuleId[];
-    newRules?: ReligareRule[];
+    // Preferred whisper naming
+    whispersApplied?: KernelWhisperId[];
+    newWhispers?: KernelWhisper[];
+    // Backward-compatible fields (to be removed once data is fully migrated)
+    rulesApplied?: KernelWhisperId[];
+    newRules?: KernelWhisper[];
   };
 }
 
@@ -129,11 +133,12 @@ export interface FieldState {
   }[];
 }
 
-// Religare rules
-export type ReligareRuleId = string;
+// Kernel whispers (soft rules)
+export type KernelWhisperId = string;
 
-export interface ReligareRule {
-  ruleId: ReligareRuleId;
+export interface KernelWhisper {
+  // kept as ruleId for legacy data compatibility; semantic = whisper id
+  ruleId: KernelWhisperId;
   description: string;
   createdFromEventId: string;
   antecedent?: string;
@@ -141,11 +146,17 @@ export interface ReligareRule {
   layersAffected?: KernelLayerId[];
 }
 
+// Legacy aliases (to be removed once all downstream code migrates)
+export type ReligareRuleId = KernelWhisperId;
+export type ReligareRule = KernelWhisper;
+
 // Processing context
 export interface ProcessingContext {
   event: KernelEvent;
   layerStates: LayerState[];
-  rules: ReligareRule[];
+  whispers?: KernelWhisper[];
+  // Legacy name for downstream data still using "rules"
+  rules?: KernelWhisper[];
   fieldSnapshots?: FieldState[];
 }
 

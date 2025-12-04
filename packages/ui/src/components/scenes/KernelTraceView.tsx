@@ -2,14 +2,15 @@ import React from 'react';
 import type {
   FieldState,
   KernelEvent,
+  KernelWhisper,
   LayerState,
-  ReligareRule,
 } from '../../../../kernel/src/types';
 
 type ProcessedScene = {
   event: KernelEvent;
   layerStates: LayerState[];
-  rules: ReligareRule[];
+  whispers?: KernelWhisper[];
+  rules?: KernelWhisper[]; // legacy
   fieldSnapshots?: FieldState[];
 };
 
@@ -30,11 +31,11 @@ const LAYER_LABEL: Record<LayerState['layer'], string> = {
   L4_ARCHETYPAL: 'Arhetipal',
   L5_TRANSGENERATIONAL: 'Transgenerațional',
   L6_FIELD: 'Câmp',
-  L7_KERNEL: 'Kernel / Reguli',
+  L7_KERNEL: 'Kernel / Whisper',
 };
 
 export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
-  const mainRule = scene.rules[0];
+  const mainWhisper = (scene.whispers ?? scene.rules ?? [])[0];
   const startSnapshot = scene.fieldSnapshots?.[0];
   const endSnapshot = scene.fieldSnapshots?.[scene.fieldSnapshots.length - 1];
 
@@ -54,10 +55,10 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
             {scene.event.trigger} · {scene.event.sourceTerritory}
           </p>
         </div>
-        {mainRule && (
+        {mainWhisper && (
           <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/60 bg-purple-500/10 px-3 py-1 text-[11px] font-semibold text-purple-100">
             <span className="h-2 w-2 rounded-full bg-purple-400 animate-pulse" />
-            L7 RULE WRITTEN
+            L7 WHISPER WRITTEN
           </div>
         )}
       </header>
@@ -148,14 +149,14 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
         </div>
       </section>
 
-      {mainRule && (
+      {mainWhisper && (
         <section className="relative mt-4 rounded-xl border border-purple-500/60 bg-purple-900/20 p-3">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-purple-100">Kernel rule</p>
-          <p className="text-xs font-mono text-purple-100">{mainRule.ruleId}</p>
-          <p className="mt-1 text-sm text-purple-50/90">{mainRule.description}</p>
-          {mainRule.layersAffected && (
+          <p className="text-[11px] uppercase tracking-[0.14em] text-purple-100">Kernel whisper</p>
+          <p className="text-xs font-mono text-purple-100">{mainWhisper.ruleId}</p>
+          <p className="mt-1 text-sm text-purple-50/90">{mainWhisper.description}</p>
+          {mainWhisper.layersAffected && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {mainRule.layersAffected.map((layer: string) => (
+              {mainWhisper.layersAffected.map((layer: string) => (
                 <span
                   key={layer}
                   className="rounded-full border border-purple-400/50 bg-slate-950/70 px-2 py-0.5 text-[10px] text-purple-100"

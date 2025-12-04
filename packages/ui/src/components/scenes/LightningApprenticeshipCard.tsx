@@ -4,7 +4,7 @@ import type {
   KernelEvent,
   KernelLayerId,
   LayerState,
-  ReligareRule,
+  KernelWhisper,
 } from '../../../../kernel/src/types';
 import processedSceneJson from '../../../../kernel/examples/apprenticeship.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
@@ -116,7 +116,7 @@ export const LightningApprenticeshipCard: React.FC = () => {
         summary: entry.description ?? entry.title
       })) ?? [];
 
-    const rules: ReligareRule[] = processedScene.kernelRule
+    const whispers: KernelWhisper[] = processedScene.kernelRule
       ? [
           {
             ruleId: processedScene.kernelRule.id,
@@ -125,9 +125,10 @@ export const LightningApprenticeshipCard: React.FC = () => {
             antecedent:
               "description CONȚINE 'young lightning' OR 'apprentice' AND field includes 'guardian_present'",
             consequent: "Field.vibe = 'COHERENT_PRESENCE'; Identity.state = 'Agency';",
-            layersAffected: processedScene.kernelRule.layersAffected
-              ?.map((id) => mapLayerId(id) as KernelLayerId)
-              .filter(Boolean) as KernelLayerId[]
+            layersAffected:
+              processedScene.kernelRule.layersAffected
+                ?.map((id) => mapLayerId(id) as KernelLayerId)
+                .filter(Boolean) ?? undefined
           }
         ]
       : [];
@@ -148,7 +149,7 @@ export const LightningApprenticeshipCard: React.FC = () => {
       });
     }
 
-    return { event, layerStates, rules, fieldSnapshots };
+    return { event, layerStates, whispers, fieldSnapshots };
   }, []);
 
   return (
