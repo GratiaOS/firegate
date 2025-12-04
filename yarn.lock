@@ -816,8 +816,17 @@
   resolved "https://registry.yarnpkg.com/@gratiaos/icons/-/icons-1.0.4.tgz#160792896f14b2c484b60df5fbc18750c646dcb6"
   integrity sha512-gR1wXCGwzGt4Z4IsA6U4kUl0uVoWhhLQRv/vw5ecQrnCvKJdHtsmSCF0qxMSn1iheGh2aPPtTQbY1trHA9EAZA==
 
-"@gratiaos/presence-kernel@workspace:*":
-  version "0.0.0"
+"@gratiaos/presence-kernel@1.1.3", "@gratiaos/presence-kernel@workspace:*":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@gratiaos/presence-kernel/-/presence-kernel-1.1.3.tgz#9e2d4067a706fdf1e9bc273e5d0a27b5bdb63a28"
+  integrity sha512-ysiiCJt6WbgQXF03SoQhuq6jN1wEAp5ie40cwTNJinNnZ1btfXMePezIzZssd0pXOkNbjoMaeShucOAUtDnGAA==
+  dependencies:
+    "@gratiaos/signal" "workspace:*"
+
+"@gratiaos/signal@1.0.3", "@gratiaos/signal@workspace:*":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@gratiaos/signal/-/signal-1.0.3.tgz#026c622508649feb49bb7a733fd150c56d0c541e"
+  integrity sha512-fESNzwkBHByYMoPBUcOfTlAyceG2gpjDEFYEJn0FGzEP8Er6txsQcT6tbf4qWGRtGTcFoi3AUkLw9O+yD7mqOA==
 
 "@gratiaos/tokens@^1.0.5":
   version "1.0.5"
