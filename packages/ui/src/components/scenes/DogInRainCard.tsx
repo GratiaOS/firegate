@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { FieldState, KernelEvent, LayerState, ReligareRule } from '@gratia/kernel';
-import processedSceneJson from '@gratia/kernel/examples/dog-in-rain.processed.json' with { type: 'json' };
+import processedSceneJson from '../../../kernel/examples/dog-in-rain.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
 import { KernelTraceView } from './KernelTraceView';
 
