@@ -816,6 +816,21 @@
   resolved "https://registry.yarnpkg.com/@gratiaos/icons/-/icons-1.0.4.tgz#160792896f14b2c484b60df5fbc18750c646dcb6"
   integrity sha512-gR1wXCGwzGt4Z4IsA6U4kUl0uVoWhhLQRv/vw5ecQrnCvKJdHtsmSCF0qxMSn1iheGh2aPPtTQbY1trHA9EAZA==
 
+"@gratiaos/presence-kernel@workspace:*":
+  version "0.0.0"
+
+"@gratiaos/tokens@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@gratiaos/tokens/-/tokens-1.0.5.tgz#af1a928d9035c17ad190015f47ea49e81d71c327"
+  integrity sha512-P5Jltt9TWjmiMlUSNxQK0In7R8e3cnlP61EHurT7D7WXJev1O9YqXXYSThy0O4v+FvCtt7vZ4SwI7LjGQM0NGg==
+
+"@gratiaos/ui@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@gratiaos/ui/-/ui-1.1.0.tgz#3cf8516a9e3ff4ad0c39a2a8ce4d44b83c1ab0cd"
+  integrity sha512-ZOPZMCqKdkFNUE1fO+VC+R9hOxrY45aWHThtGRnKy3NWYvDSJ3XhSDazT1NiYLmqwbXg6NbglD1Rq/0AVAnX6Q==
+  dependencies:
+    "@gratiaos/presence-kernel" "workspace:*"
+
 "@grpc/grpc-js@~1.9.0":
   version "1.9.15"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.9.15.tgz#433d7ac19b1754af690ea650ab72190bd700739b"

@@ -20,6 +20,9 @@
     "prepare": "husky install"
   },
   "preinstall": "node -e \"const [major]=process.versions.node.split('.'); if(major !== '20'){ console.error('❌ Node 20.x required. You are on', process.versions.node); process.exit(1); }\"",
+  "resolutions": {
+    "@gratiaos/presence-kernel": "0.0.0"
+  },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": "eslint --fix"
   },

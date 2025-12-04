@@ -1,0 +1,7 @@
+{
+  "name": "@gratiaos/presence-kernel",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Stub presence kernel to satisfy workspace dependency"
+}
