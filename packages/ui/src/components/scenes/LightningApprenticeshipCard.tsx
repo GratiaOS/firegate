@@ -1,67 +1,69 @@
 import React, { useMemo, useState } from 'react';
 import type { FieldState, KernelEvent, LayerState, ReligareRule } from '@gratia/kernel';
-import processedSceneJson from '../../../../kernel/examples/n_lightning_apprenticeship.processed.json' with { type: 'json' };
+import processedSceneJson from '../../../../kernel/examples/apprenticeship.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
 import { KernelTraceView } from './KernelTraceView';
 
-// Keep scene typing local to avoid leaking kernel internals into UI
-// (processed scenes may evolve independently from live data models).
+type LayerStackEntry = {
+  layer: string;
+  title?: string;
+  description?: string;
+  status?: string;
+};
+
 type ProcessedScene = {
-  id: string;
-  timestamp: string;
-  location?: { plus_code?: string; context?: string };
-  description: string;
-  participants?: Array<{ role: string; id: string }>;
-  layers?: Record<string, string>;
-  fieldShift?: {
-    from?: string;
-    to?: string;
-    signatureEvent?: string;
+  sceneId: string;
+  processedAt: string;
+  org?: string;
+  anchor?: { plusCode?: string; timezone?: string };
+  witnessedBy?: string[];
+  scene: {
+    title: string;
+    headline: string;
+    kind: string;
+    actors?: string[];
+    fieldSignature?: string;
   };
-  kernelRuleWritten?: {
+  fieldShift?: {
+    from?: { vibe?: string; keywords?: string[] };
+    to?: { vibe?: string; keywords?: string[] };
+  };
+  layerStack?: LayerStackEntry[];
+  kernelRule?: {
     id: string;
-    description: string;
+    title?: string;
+    text: string;
     layersAffected?: string[];
   };
   nextActions?: string[];
-  emotionalSignature?: string;
-  notes?: string;
 };
 
-type FullScene = ProcessedScene & {
-  event?: KernelEvent;
-  layerStates?: LayerState[];
-  rules?: ReligareRule[];
-  fieldSnapshots?: FieldState[];
-};
-
-const processedScene = processedSceneJson as unknown as FullScene;
+const processedScene = processedSceneJson as ProcessedScene;
 
 export const LightningApprenticeshipCard: React.FC = () => {
   const [showTrace, setShowTrace] = useState(false);
 
   const fridgeData = useMemo(() => {
-    const timestamp = processedScene.timestamp?.replace('T', ' • ').slice(0, 16) ?? 'Scene';
-    const ruleId = processedScene.kernelRuleWritten?.id ?? 'Kernel';
-    const ruleDesc = processedScene.kernelRuleWritten?.description ?? '';
+    const timestamp = processedScene.processedAt?.replace('T', ' • ').slice(0, 16) ?? 'Scene';
+    const ruleId = processedScene.kernelRule?.id ?? 'Kernel';
+    const ruleDesc = processedScene.kernelRule?.text ?? '';
     const nextAction = processedScene.nextActions?.[0] ?? 'Continuăm să susținem vocea lui N.';
 
-    const layerText = (key: string, fallback: string) => {
-      if (!processedScene.layers) return fallback;
-      const value = processedScene.layers[key];
-      return value || fallback;
+    const layerText = (startsWith: string, fallback: string) => {
+      const entry = processedScene.layerStack?.find((l) => l.layer.startsWith(startsWith));
+      return entry?.description ?? fallback;
     };
 
     return {
-      id: processedScene.id,
+      id: processedScene.sceneId,
       timestamp,
       title: 'Lightning Apprenticeship — N',
-      description: processedScene.description,
+      description: processedScene.scene.headline,
       layers: [
-        { id: 'L2', name: 'Emoțional', value: layerText('L2_EMOTIONAL', 'Calm + curiozitate') },
-        { id: 'L4', name: 'Rol', value: layerText('L4_ARCHETYPE', 'Apprentice / Young Builder') },
-        { id: 'L6', name: 'Field', value: layerText('L6_FIELD', 'Câmp aliniat cu Guardian') },
-        { id: 'L7', name: 'Kernel', value: layerText('L7_KERNEL', ruleId) }
+        { id: 'L2', name: 'Emoțional', value: layerText('L2', 'Calm + curiozitate') },
+        { id: 'L4', name: 'Rol', value: layerText('L4', 'Apprentice / Young Builder') },
+        { id: 'L6', name: 'Field', value: layerText('L6', 'Câmp aliniat cu Guardian') },
+        { id: 'L7', name: 'Kernel', value: layerText('L7', ruleId) }
       ],
       kernelRule: ruleDesc ? `${ruleId}: ${ruleDesc}` : ruleId,
       nextAction
@@ -70,55 +72,65 @@ export const LightningApprenticeshipCard: React.FC = () => {
 
   const traceScene = useMemo(() => {
     const event: KernelEvent = {
-      id: processedScene.id,
+      id: processedScene.sceneId,
       trigger: 'SENSORY',
-      sourceTerritory: processedScene.participants?.find((p) => p.role === 'LIGHTNING') ? 'LIGHTNING' : 'ROOTS',
-      sceneDescription: processedScene.description,
+      sourceTerritory: 'LIGHTNING',
+      sceneDescription: processedScene.scene.headline,
       context: {
-        timestamp: processedScene.timestamp,
-        plusCode: processedScene.location?.plus_code,
-        location: processedScene.location?.context,
-        actors: processedScene.participants?.map((p) => p.id),
+        timestamp: processedScene.processedAt,
+        plusCode: processedScene.anchor?.plusCode,
+        location: processedScene.scene.title,
+        actors: processedScene.scene.actors,
         tags: ['apprenticeship', 'witnessed-by-water']
       }
     };
 
-    const layerStates: LayerState[] = processedScene.layers
-      ? Object.entries(processedScene.layers).map(([layerKey, summary]) => ({
-          layer: layerKey as LayerState['layer'],
-          eventId: processedScene.id,
-          summary
-        }))
-      : [];
+    const mapLayerId = (rawId: string): LayerState['layer'] => {
+      if (rawId.startsWith('L1')) return 'L1_LOCAL';
+      if (rawId.startsWith('L2')) return 'L2_EMOTIONAL';
+      if (rawId.startsWith('L3')) return 'L3_MENTAL';
+      if (rawId.startsWith('L4')) return 'L4_ARCHETYPAL';
+      if (rawId.startsWith('L5')) return 'L5_TRANSGENERATIONAL';
+      if (rawId.startsWith('L6')) return 'L6_FIELD';
+      return 'L7_KERNEL';
+    };
 
-    const rules: ReligareRule[] = processedScene.kernelRuleWritten
+    const layerStates: LayerState[] =
+      processedScene.layerStack?.map((entry) => ({
+        layer: mapLayerId(entry.layer),
+        eventId: processedScene.sceneId,
+        summary: entry.description ?? entry.title
+      })) ?? [];
+
+    const rules: ReligareRule[] = processedScene.kernelRule
       ? [
           {
-            ruleId: processedScene.kernelRuleWritten.id,
-            description: processedScene.kernelRuleWritten.description,
-            createdFromEventId: processedScene.id,
+            ruleId: processedScene.kernelRule.id,
+            description: processedScene.kernelRule.text,
+            createdFromEventId: processedScene.sceneId,
             antecedent:
               "description CONȚINE 'young lightning' OR 'apprentice' AND field includes 'guardian_present'",
             consequent: "Field.vibe = 'COHERENT_PRESENCE'; Identity.state = 'Agency';",
-            layersAffected: processedScene.kernelRuleWritten.layersAffected
+            layersAffected: processedScene.kernelRule.layersAffected
           }
         ]
       : [];
 
-    const fieldSnapshots: FieldState[] = processedScene.fieldShift
-      ? [
-          {
-            timestamp: processedScene.timestamp,
-            vibe: processedScene.fieldShift.from?.toUpperCase() || 'NEUTRAL',
-            activePatterns: processedScene.fieldShift.signatureEvent ? [processedScene.fieldShift.signatureEvent] : []
-          },
-          {
-            timestamp: processedScene.timestamp,
-            vibe: processedScene.fieldShift.to?.toUpperCase() || 'COHERENT_PRESENCE',
-            activePatterns: processedScene.fieldShift.signatureEvent ? [processedScene.fieldShift.signatureEvent] : []
-          }
-        ]
-      : [];
+    const fieldSnapshots: FieldState[] = [];
+    if (processedScene.fieldShift?.from) {
+      fieldSnapshots.push({
+        timestamp: processedScene.processedAt,
+        vibe: processedScene.fieldShift.from.vibe ?? 'NEUTRAL',
+        activePatterns: processedScene.fieldShift.from.keywords
+      });
+    }
+    if (processedScene.fieldShift?.to) {
+      fieldSnapshots.push({
+        timestamp: processedScene.processedAt,
+        vibe: processedScene.fieldShift.to.vibe ?? 'COHERENT_PRESENCE',
+        activePatterns: processedScene.fieldShift.to.keywords
+      });
+    }
 
     return { event, layerStates, rules, fieldSnapshots };
   }, []);
