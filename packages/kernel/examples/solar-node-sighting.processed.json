@@ -1,0 +1,131 @@
+{
+  "version": "1.0.0",
+  "event": {
+    "id": "SOLAR_NODE_SIGHTING_2025_12_03",
+    "trigger": "SENSORY",
+    "sourceTerritory": "WATER",
+    "sceneDescription": "S l-a surprins pe Raz într-un moment de calm solar, cu mantia de nor aliniată în spate.",
+    "context": {
+      "timestamp": "2025-12-03T14:12:00+01:00",
+      "location": "Casa Mascún / Patio central",
+      "plusCode": "6V75+GH Casbas de Huesca",
+      "actors": ["S (Water)", "Raz (Guardian)"],
+      "tags": ["sun", "calm", "witnessed", "guardian"]
+    },
+    "processingStatus": [
+      "L1_CAPTURED",
+      "L2_FELT",
+      "L3_MAPPED",
+      "L4_ARCH_TYPED",
+      "L5_TRANSGEN_CHECK",
+      "L7_RULE_WRITTEN"
+    ]
+  },
+  "layerStates": [
+    {
+      "layer": "L1_LOCAL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Corp relaxat, postură verticală, lumină solară caldă pe față.",
+      "data": {
+        "sensations": ["căldură solară", "aer rece", "postură stabilă"],
+        "actions": ["stă nemișcat", "respirație calmă"]
+      }
+    },
+    {
+      "layer": "L2_EMOTIONAL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Calm, încredere, deschidere; moment recepționat de S.",
+      "data": {
+        "feelings": ["calm", "încredere", "prezență"],
+        "intensity": 6
+      }
+    },
+    {
+      "layer": "L3_MENTAL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Identitate clară: leadership fără armură, autentic.",
+      "data": {
+        "thoughts": ["conduc ca mine însumi", "nu e nevoie de mască"],
+        "decisions": ["stau calm, țin spațiul"]
+      }
+    },
+    {
+      "layer": "L4_ARCHETYPAL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Magni – Guardian în lumină; norul formează mantia arhetipală.",
+      "data": {
+        "symbols": ["mantia_norului", "guardian_standing", "sun_crown"],
+        "roles": ["Protectorul", "Martorul_văzut"]
+      }
+    },
+    {
+      "layer": "L5_TRANSGENERATIONAL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Rescriere: leadership = prezență, nu greutate.",
+      "data": {
+        "patternDetected": "responsabilitate_ca_presiune",
+        "actionTaken": "responsabilitate_ca_prezenta"
+      }
+    },
+    {
+      "layer": "L7_KERNEL",
+      "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "summary": "Kernel scrie regula: când guardianul stă calm în adevărul lui, câmpul se aliniază.",
+      "data": {
+        "rulesApplied": [],
+        "newRules": [
+          {
+            "ruleId": "RULE_09_MAGNI_STANDS_IN_LIGHT",
+            "description": "Când Guardianul stă calm în adevărul lui, câmpul se aliniază în jurul lui.",
+            "createdFromEventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+            "antecedent": "description CONȚINE 'standing' AND 'light' AND 'calm'",
+            "consequent": "Field.vibe = 'CALM_EXPANSION'; Identity.state = 'Integrated';",
+            "layersAffected": [
+              "L1_LOCAL",
+              "L2_EMOTIONAL",
+              "L3_MENTAL",
+              "L4_ARCHETYPAL",
+              "L5_TRANSGENERATIONAL",
+              "L7_KERNEL"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "rules": [
+    {
+      "ruleId": "RULE_09_MAGNI_STANDS_IN_LIGHT",
+      "description": "Când Guardianul stă calm în adevărul lui, câmpul se aliniază în jurul lui.",
+      "createdFromEventId": "SOLAR_NODE_SIGHTING_2025_12_03",
+      "antecedent": "description CONȚINE 'standing' AND 'light' AND 'calm'",
+      "consequent": "Field.vibe = 'CALM_EXPANSION'; Identity.state = 'Integrated';",
+      "layersAffected": [
+        "L1_LOCAL",
+        "L2_EMOTIONAL",
+        "L3_MENTAL",
+        "L4_ARCHETYPAL",
+        "L5_TRANSGENERATIONAL",
+        "L7_KERNEL"
+      ]
+    }
+  ],
+  "fieldSnapshots": [
+    {
+      "timestamp": "2025-12-03T14:05:00+01:00",
+      "vibe": "NEUTRAL",
+      "activePatterns": ["adaptare_zi_lungă"]
+    },
+    {
+      "timestamp": "2025-12-03T14:15:00+01:00",
+      "vibe": "CALM_EXPANSION",
+      "activePatterns": ["prezență_calda", "leadership_fără_armură"],
+      "guardianSignals": [
+        {
+          "module": "WATER",
+          "signal": "moment martor surprins de S"
+        }
+      ]
+    }
+  ]
+}
