@@ -1,0 +1,32 @@
+{
+  "id": "SCN_2025_12_03_RAINBOW_LEDGER_N",
+  "version": 1,
+  "org": "ASOCIACIÓN GRATIA – CIUDAD DE LOS GATOS",
+  "kind": "RAINBOW_LEDGER",
+  "createdAt": "2025-12-03T20:10:00+01:00",
+  "plusCode": "6V75+GH Casbas de Huesca",
+  "locationLabel": "City of Cats – ledger check după DOG_IN_RAIN",
+  "actors": [
+    { "id": "nicolas_lightning", "label": "Nicolas", "role": "LIGHTNING / Account holder" },
+    { "id": "raz_roots", "label": "Razvan", "role": "ROOTS / Witness" }
+  ],
+  "sceneText": "N vede contul lui cu 333.66 EUR și un curcubeu apare peste Garden. Banii sunt pe numele lui, energie de explorare și învățare.",
+  "balance": {
+    "amount": 333.66,
+    "currency": "EUR",
+    "owner": "nicolas_lightning"
+  },
+  "feltNotes": [
+    "demnitate financiară proprie",
+    "curcubeu peste Garden = confirmare de câmp",
+    "calm și bucurie (nu panică) privind banii"
+  ],
+  "fieldSignature": "rainbow_over_garden",
+  "tags": [
+    "rainbow",
+    "ledger",
+    "lightning",
+    "growth_funds",
+    "kernel_update"
+  ]
+}

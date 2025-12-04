@@ -1,0 +1,83 @@
+{
+  "sceneId": "SCN_2025_12_03_RAINBOW_LEDGER_N",
+  "processedAt": "2025-12-03T20:30:00+01:00",
+  "kernelVersion": "0.1.0",
+  "org": "ASOCIACIÓN GRATIA – CIUDAD DE LOS GATOS",
+  "anchor": {
+    "plusCode": "6V75+GH Casbas de Huesca",
+    "timezone": "Europe/Madrid"
+  },
+  "witnessedBy": ["ROOTS"],
+  "scene": {
+    "title": "Rainbow Ledger — Lightning funds",
+    "headline": "N își vede contul (333.66 EUR) și un curcubeu apare peste Garden.",
+    "kind": "RAINBOW_LEDGER",
+    "actors": ["nicolas_lightning", "raz_roots"],
+    "fieldSignature": "rainbow_over_garden"
+  },
+  "fieldShift": {
+    "from": {
+      "vibe": "NEUTRAL_OBSERVATION",
+      "keywords": ["saldo", "verificare cont"]
+    },
+    "to": {
+      "vibe": "CALM",
+      "keywords": ["demnitate_financiară", "energie_de_explorare", "rainbow_signal"]
+    }
+  },
+  "layerStack": [
+    {
+      "layer": "L1_LOCAL_SOMATIC",
+      "title": "Somatic / Local",
+      "description": "Privire relaxată pe ecran, corp calmat; nu există tensiune financiară.",
+      "status": "processed"
+    },
+    {
+      "layer": "L2_EMOTIONAL",
+      "title": "Emotional",
+      "description": "Bucurie și calm la vederea sumei; curcubeul confirmă sentimentul de siguranță.",
+      "status": "processed"
+    },
+    {
+      "layer": "L3_MENTAL_MAP",
+      "title": "Mental / Harta",
+      "description": "Reîncadrare: fondurile lui N = energie pentru creștere și explorare, nu pușculiță de panică.",
+      "status": "processed"
+    },
+    {
+      "layer": "L4_ARCHETYPAL",
+      "title": "Arhetipal",
+      "description": "Lightning ca Explorer; curcubeul = permisiune de mișcare blândă.",
+      "status": "processed"
+    },
+    {
+      "layer": "L6_FIELD",
+      "title": "Field",
+      "description": "Curcubeu peste Garden după DOG_IN_RAIN; câmpul spune că regula este acceptată.",
+      "status": "processed"
+    },
+    {
+      "layer": "L7_KERNEL",
+      "title": "Kernel / Reguli",
+      "description": "Kernel scrie regula: fondurile Lightning sunt dedicate explorării și învățării, în acord cu familia.",
+      "status": "final"
+    }
+  ],
+  "kernelRule": {
+    "id": "RULE_18_LIGHTNING_FUNDS_ARE_FOR_GROWTH",
+    "title": "Lightning funds are for growth",
+    "text": "Când un tânăr Lightning deține resurse proprii, sistemul tratează acei bani ca energie de explorare și învățare. Deciziile se iau împreună, dar demnitatea financiară rămâne a lui.",
+    "layersAffected": [
+      "L2_EMOTIONAL",
+      "L3_MENTAL_MAP",
+      "L4_ARCHETYPAL",
+      "L6_FIELD",
+      "L7_KERNEL"
+    ]
+  },
+  "nextActions": [
+    "Definește împreună cu N o listă de explorări unde banii pot fi folosiți (trips, learning, gear).",
+    "Notează în ledger momentul curcubeului ca marker de ‘ok to grow’.",
+    "Reia conversația peste 30 zile: ce am învățat din modul în care am folosit fondurile?"
+  ]
+}
