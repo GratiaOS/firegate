@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Button } from '@gratiaos/ui';
 import ledgerProcessedJson from '../../../../kernel/examples/rainbow-ledger.processed.json' with { type: 'json' };
 
 type LedgerEntry = {
@@ -142,13 +143,9 @@ export default function Ledger() {
               placeholder="Pentru ce folosim (trip, gear, learning)?"
               className="w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-400 min-h-[80px]"
             />
-            <button
-              type="button"
-              onClick={addEntry}
-              className="inline-flex items-center justify-center rounded-full bg-emerald-400/90 px-4 py-2 text-sm font-semibold text-emerald-950 shadow-md hover:bg-emerald-300 transition-colors"
-            >
+            <Button type="button" onClick={addEntry} variant="primary" tone="accent">
               Log entry
-            </button>
+            </Button>
           </div>
         </div>
 

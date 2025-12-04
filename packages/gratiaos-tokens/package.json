@@ -1,0 +1,10 @@
+{
+  "name": "@gratiaos/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimal GratiaOS tokens for Firegate local UI",
+  "exports": {
+    "./theme.css": "./theme.css"
+  }
+}
