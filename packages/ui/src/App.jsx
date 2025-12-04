@@ -9,6 +9,7 @@ import TranslateUI from '@features/TranslateUI';
 import Manifesto from '@features/Manifesto';
 import Codex from '@features/Codex';
 import Scenes from '@features/Scenes';
+import Ledger from '@features/Ledger';
 import { Toaster } from 'sonner';
 import { OnlineStatusProvider } from './context/OnlineStatusContext';
 import CaminoViewer from '@/features/Camino';
@@ -40,6 +41,7 @@ function App() {
             <Route path="/translate-ui" element={<TranslateUI />} />
             <Route path="/codex" element={<Codex />} />
             <Route path="/scenes" element={<Scenes />} />
+            <Route path="/ledger" element={<Ledger />} />
           </Route>
         </Routes>
         <Toaster position="top-right" />
