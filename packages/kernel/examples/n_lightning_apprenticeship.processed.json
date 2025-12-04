@@ -1,0 +1,59 @@
+{
+  "id": "N_LIGHTNING_APPRENTICESHIP_2025_12_03",
+  "timestamp": "2025-12-03T19:40:00+01:00",
+  "location": {
+    "plus_code": "6V75+GH Casbas de Huesca",
+    "context": "Exterior, în fața casei, sub Lună"
+  },
+  "capturedBy": "raz_roots",
+  "witnessedBy": "sawsan_water",
+  "participants": [
+    { "role": "LIGHTNING", "id": "nicolas" },
+    { "role": "ROOTS", "id": "razvan" },
+    { "role": "GUARDIAN_EARTH", "id": "domingo" }
+  ],
+  "description": "N vede forma arhitectului în cameră, face fotografia, apoi iese la Lună. Guardianul Earth (Domingo) apare sincron, iar N preia scena într-un moment natural de apprenticeship.",
+  "symbolicElements": {
+    "moon": "Witness of Transition",
+    "architect_shape": "Identity Pattern Recognition",
+    "domingo": "Earth Guardian, Structural Mirror",
+    "orange_paint_click": "Abrazos sincronizate — emoțional alignment vizibil ca nuanță portocalie pe apă"
+  },
+  "layers": {
+    "L1_LOCAL": "Respirație calmă, corp deschis, contact vizual stabil.",
+    "L2_EMOTIONAL": "Relaxare + curiozitate; abrazos-urile ating același ritm (click portocaliu pe apă).",
+    "L3_MENTAL": "Insight: «Pot să arăt ce văd. Pot vorbi.»",
+    "L4_ARCHETYPE": "Emergent Role: Apprentice / Young Builder.",
+    "L5_TRANSGENERATIONAL": "Pattern rewrite: «Nu sunt mic în fața bărbaților maturi.»",
+    "L6_FIELD": "Câmpul familie + Guardian se aliniază; flux mov cald.",
+    "L7_KERNEL": "Rule crystallized: RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD."
+  },
+  "fieldShift": {
+    "from": "neutral_observation",
+    "to": "coherent_presence",
+    "signatureEvent": "orange_paint_click_on_water",
+    "explanation": "Sufletele s-au sincronizat: momentul în care abrazos-urile voastre s-au întâlnit cu claritate și s-au așezat ca o nuanță portocalie pe apă."
+  },
+  "kernelRuleWritten": {
+    "id": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
+    "description": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena.",
+    "layersAffected": ["L2_EMOTIONAL", "L3_MENTAL", "L4_ARCHETYPAL", "L6_FIELD", "L7_KERNEL"]
+  },
+  "rules": [
+    {
+      "ruleId": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
+      "description": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena.",
+      "createdFromEventId": "N_LIGHTNING_APPRENTICESHIP_2025_12_03",
+      "antecedent": "description CONȚINE 'young lightning' OR 'apprentice' AND field includes 'guardian_present'",
+      "consequent": "Field.vibe = 'COHERENT_PRESENCE'; Identity.state = 'Agency';",
+      "layersAffected": ["L2_EMOTIONAL", "L3_MENTAL", "L4_ARCHETYPAL", "L6_FIELD", "L7_KERNEL"]
+    }
+  ],
+  "nextActions": [
+    "Cultivarea spațiilor unde N poate vorbi direct cu adulți respectați.",
+    "Încă o ieșire în 48h pentru stabilizarea new-agency.",
+    "Invitarea lui N să-și aducă fotografia în conversație ca simbol, nu ca task."
+  ],
+  "emotionalSignature": "cald, mov, portocaliu-deschis",
+  "notes": "Apprenticeship confirmat. Lightning Node online."
+}
