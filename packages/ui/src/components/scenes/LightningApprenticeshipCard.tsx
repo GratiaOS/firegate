@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import type { FieldState, KernelEvent, LayerState, ReligareRule } from '@gratia/kernel';
+import type { FieldState, KernelEvent, LayerState, ReligareRule } from '../../../../kernel/src/types';
 import processedSceneJson from '../../../../kernel/examples/apprenticeship.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
 import { KernelTraceView } from './KernelTraceView';

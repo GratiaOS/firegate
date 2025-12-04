@@ -4,7 +4,7 @@ import type {
   KernelEvent,
   LayerState,
   ReligareRule,
-} from '@gratia/kernel';
+} from '../../../../kernel/src/types';
 
 type ProcessedScene = {
   event: KernelEvent;
@@ -68,7 +68,7 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
           <p className="mt-1 text-sm text-slate-100">{scene.event.sceneDescription}</p>
           {scene.event.context.actors && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {scene.event.context.actors.map((actor) => (
+              {scene.event.context.actors.map((actor: string) => (
                 <span
                   key={actor}
                   className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200"
@@ -99,7 +99,7 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
           </div>
           {endSnapshot?.activePatterns && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {endSnapshot.activePatterns.map((pattern) => (
+              {endSnapshot.activePatterns.map((pattern: string) => (
                 <span
                   key={pattern}
                   className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200"
@@ -155,7 +155,7 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
           <p className="mt-1 text-sm text-purple-50/90">{mainRule.description}</p>
           {mainRule.layersAffected && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {mainRule.layersAffected.map((layer) => (
+              {mainRule.layersAffected.map((layer: string) => (
                 <span
                   key={layer}
                   className="rounded-full border border-purple-400/50 bg-slate-950/70 px-2 py-0.5 text-[10px] text-purple-100"
