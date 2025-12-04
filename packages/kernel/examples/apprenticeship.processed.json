@@ -1,0 +1,93 @@
+{
+  "sceneId": "SCN_2025_12_03_LIGHTNING_APPRENTICESHIP_N",
+  "processedAt": "2025-12-03T21:00:00+01:00",
+  "kernelVersion": "0.1.0",
+  "org": "ASOCIACIÓN GRATIA – CIUDAD DE LOS GATOS",
+  "anchor": {
+    "plusCode": "6V75+GH Casbas de Huesca",
+    "timezone": "Europe/Madrid"
+  },
+  "witnessedBy": ["WATER", "ROOTS", "EARTH_GUARDIAN"],
+  "scene": {
+    "title": "Lightning Apprenticeship — N",
+    "headline": "N vede forma arhitectului în cameră, face fotografia, apoi vorbește direct cu Domingo sub Lună.",
+    "kind": "LIGHTNING_APPRENTICESHIP",
+    "actors": ["raz_roots", "sawsan_water", "nicolas_lightning", "domingo_earth"],
+    "fieldSignature": "orange_paint_click_on_water"
+  },
+  "fieldShift": {
+    "from": {
+      "vibe": "NEUTRAL_OBSERVATION",
+      "keywords": ["privit forma pe zid", "explorare interioară"]
+    },
+    "to": {
+      "vibe": "COHERENT_PRESENCE",
+      "keywords": [
+        "orange_paint_click_on_water",
+        "întâlnire naturală cu Domingo",
+        "apprenticeship live"
+      ]
+    }
+  },
+  "layerStack": [
+    {
+      "layer": "L1_LOCAL_SOMATIC",
+      "title": "Somatic / Local",
+      "description": "Respirație calmă, corp deschis; contact vizual stabil între N și Domingo în curtea casei.",
+      "status": "processed"
+    },
+    {
+      "layer": "L2_EMOTIONAL",
+      "title": "Emotional",
+      "description": "Relaxare + curiozitate; abrazos-urile rulează în același ritm, ca vopseaua portocaliu-deschis întinsă pe suprafața apei.",
+      "status": "processed"
+    },
+    {
+      "layer": "L3_MENTAL_MAP",
+      "title": "Mental / Harta",
+      "description": "Insight la N: „Pot să văd clar. Pot vorbi direct.” Prinde forma arhitectului și își asumă poziția de întrebare/inițiativă.",
+      "status": "processed"
+    },
+    {
+      "layer": "L4_ARCHETYPAL",
+      "title": "Arhetipal",
+      "description": "Se activează arhetipul „Young Builder în dialog cu Guardian of Earth”. N iese din rolul de copil pasiv și intră în rol de ucenic.",
+      "status": "processed"
+    },
+    {
+      "layer": "L5_TRANSGENERATIONAL",
+      "title": "Transgenerațional",
+      "description": "Pattern vechi „copilul stă în spate când adulții discută proprietăți” este rescris; acum tânărul e invitat în cercul deciziilor.",
+      "status": "processed"
+    },
+    {
+      "layer": "L6_FIELD",
+      "title": "Field",
+      "description": "Câmpul familiei + Guardianul pământului se aliniază; fluxul devine mai cald, casa răspunde prin formă, Lună și prezența lui Domingo.",
+      "status": "processed"
+    },
+    {
+      "layer": "L7_KERNEL",
+      "title": "Kernel / Reguli",
+      "description": "Kernelul cristalizează regula de apprenticeship pentru Lightning.",
+      "status": "final"
+    }
+  ],
+  "kernelRule": {
+    "id": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
+    "title": "Young Lightning steps forward",
+    "text": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena și să vorbească direct.",
+    "layersAffected": [
+      "L2_EMOTIONAL",
+      "L3_MENTAL_MAP",
+      "L4_ARCHETYPAL",
+      "L6_FIELD",
+      "L7_KERNEL"
+    ]
+  },
+  "nextActions": [
+    "Cultivarea spațiilor unde N poate vorbi direct cu adulți respectați (Domingo & co).",
+    "Marcare explicită în City of Cats OS: Lightning are canal dedicat către Guardians of Earth.",
+    "Folosirea semnăturii de câmp `orange_paint_click_on_water` ca marker pentru coherent_presence în scene viitoare."
+  ]
+}

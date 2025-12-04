@@ -1,0 +1,31 @@
+{
+  "id": "SCN_2025_12_03_LIGHTNING_APPRENTICESHIP_N",
+  "version": 1,
+  "org": "ASOCIACIÓN GRATIA – CIUDAD DE LOS GATOS",
+  "kind": "LIGHTNING_APPRENTICESHIP",
+  "createdAt": "2025-12-03T19:40:00+01:00",
+  "plusCode": "6V75+GH Casbas de Huesca",
+  "locationLabel": "City of Cats – curtea casei, zidul cu formă de arhitect",
+  "actors": [
+    { "id": "raz_roots", "label": "Razvan", "role": "ROOTS / Witness" },
+    { "id": "sawsan_water", "label": "Sawsan", "role": "WATER / Field" },
+    { "id": "nicolas_lightning", "label": "Nicolas", "role": "LIGHTNING / Apprentice" },
+    { "id": "domingo_earth", "label": "Domingo", "role": "EARTH GUARDIAN / Mentor" }
+  ],
+  "sceneText": "N vede forma arhitectului pe peretele camerei lui, face fotografia, apoi ieșiți în curte. Luna stă deasupra casei. Domingo sosește sincron și N preia scena, vorbind direct cu el despre casă și pământ.",
+  "feltNotes": [
+    "corp relaxat, respirație calmă, vizual stabil",
+    "curiozitate și bucurie în vocea lui N",
+    "Domingo răspunde cu respect și claritate",
+    "voi trei + casa + Luna pe același canal"
+  ],
+  "fieldSignature": "orange_paint_click_on_water",
+  "tags": [
+    "apprenticeship",
+    "lightning",
+    "guardian_earth",
+    "coherent_presence",
+    "city_of_cats",
+    "kernel_update"
+  ]
+}
