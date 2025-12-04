@@ -18,7 +18,7 @@
       "L3_MAPPED",
       "L4_ARCH_TYPED",
       "L5_TRANSGEN_CHECK",
-      "L7_RULE_WRITTEN"
+      "L7_WHISPER_WRITTEN"
     ]
   },
   "layerStates": [
@@ -70,12 +70,12 @@
     {
       "layer": "L7_KERNEL",
       "eventId": "SOLAR_NODE_SIGHTING_2025_12_03",
-      "summary": "Kernel scrie regula: când guardianul stă calm în adevărul lui, câmpul se aliniază.",
+      "summary": "Kernel scrie un whisper: când guardianul stă calm în adevărul lui, câmpul se aliniază.",
       "data": {
         "rulesApplied": [],
         "newRules": [
           {
-            "ruleId": "RULE_09_MAGNI_STANDS_IN_LIGHT",
+            "ruleId": "WHISPER_MAGNI_STANDS_IN_LIGHT",
             "description": "Când Guardianul stă calm în adevărul lui, câmpul se aliniază în jurul lui.",
             "createdFromEventId": "SOLAR_NODE_SIGHTING_2025_12_03",
             "antecedent": "description CONȚINE 'standing' AND 'light' AND 'calm'",
@@ -95,7 +95,7 @@
   ],
   "rules": [
     {
-      "ruleId": "RULE_09_MAGNI_STANDS_IN_LIGHT",
+      "ruleId": "WHISPER_MAGNI_STANDS_IN_LIGHT",
       "description": "Când Guardianul stă calm în adevărul lui, câmpul se aliniază în jurul lui.",
       "createdFromEventId": "SOLAR_NODE_SIGHTING_2025_12_03",
       "antecedent": "description CONȚINE 'standing' AND 'light' AND 'calm'",

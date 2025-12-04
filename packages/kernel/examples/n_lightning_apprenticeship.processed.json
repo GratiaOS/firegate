@@ -26,7 +26,7 @@
     "L4_ARCHETYPE": "Emergent Role: Apprentice / Young Builder.",
     "L5_TRANSGENERATIONAL": "Pattern rewrite: «Nu sunt mic în fața bărbaților maturi.»",
     "L6_FIELD": "Câmpul familie + Guardian se aliniază; flux mov cald.",
-    "L7_KERNEL": "Rule crystallized: RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD."
+    "L7_KERNEL": "Whisper scris: Young Lightning steps forward."
   },
   "fieldShift": {
     "from": "neutral_observation",
@@ -35,13 +35,13 @@
     "explanation": "Sufletele s-au sincronizat: momentul în care abrazos-urile voastre s-au întâlnit cu claritate și s-au așezat ca o nuanță portocalie pe apă."
   },
   "kernelRuleWritten": {
-    "id": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
+    "id": "WHISPER_YOUNG_LIGHTNING_STEPS_FORWARD",
     "description": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena.",
     "layersAffected": ["L2_EMOTIONAL", "L3_MENTAL", "L4_ARCHETYPAL", "L6_FIELD", "L7_KERNEL"]
   },
   "rules": [
     {
-      "ruleId": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
+      "ruleId": "WHISPER_YOUNG_LIGHTNING_STEPS_FORWARD",
       "description": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena.",
       "createdFromEventId": "N_LIGHTNING_APPRENTICESHIP_2025_12_03",
       "antecedent": "description CONȚINE 'young lightning' OR 'apprentice' AND field includes 'guardian_present'",

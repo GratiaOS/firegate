@@ -68,14 +68,14 @@
     },
     {
       "layer": "L7_KERNEL",
-      "title": "Kernel / Reguli",
-      "description": "Kernelul cristalizează regula de apprenticeship pentru Lightning.",
+      "title": "Kernel / Whisper",
+      "description": "Whisperul de apprenticeship pentru Lightning se așază.",
       "status": "final"
     }
   ],
   "kernelRule": {
-    "id": "RULE_12_YOUNG_LIGHTNING_STEPS_FORWARD",
-    "title": "Young Lightning steps forward",
+    "id": "WHISPER_YOUNG_LIGHTNING_STEPS_FORWARD",
+    "title": "Whisper: Young Lightning steps forward",
     "text": "Când un tânăr Lightning vede formă și e susținut de Roots, iar Earth răspunde, el are dreptul natural să preia scena și să vorbească direct.",
     "layersAffected": [
       "L2_EMOTIONAL",

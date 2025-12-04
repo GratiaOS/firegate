@@ -19,7 +19,7 @@
       "L4_ARCH_TYPED",
       "L5_TRANSGEN_CHECK",
       "L6_FIELD_APPLIED",
-      "L7_RULE_WRITTEN"
+      "L7_WHISPER_WRITTEN"
     ]
   },
   "layerStates": [
@@ -89,12 +89,12 @@
     {
       "layer": "L7_KERNEL",
       "eventId": "DOG_IN_RAIN_2025_12_03",
-      "summary": "Kernelul creează o nouă regulă de sistem: nimeni nu rămâne singur în furtună.",
+      "summary": "Kernelul scrie un whisper: nimeni nu rămâne singur în furtună.",
       "data": {
         "rulesApplied": [],
         "newRules": [
           {
-            "ruleId": "RULE_07_NO_ONE_LEFT_IN_RAIN",
+            "ruleId": "WHISPER_NO_ONE_LEFT_IN_RAIN",
             "description": "În acest sistem, orice ființă găsită singură într-o ‘furtună’ (metaforică sau reală) este ajutată, hrănită și ghidată spre adăpost.",
             "createdFromEventId": "DOG_IN_RAIN_2025_12_03",
             "antecedent": "sceneDescription CONȚINE 'rătăcit' OR 'ploaie' OR 'singur_afara'",
@@ -114,7 +114,7 @@
   ],
   "rules": [
     {
-      "ruleId": "RULE_07_NO_ONE_LEFT_IN_RAIN",
+      "ruleId": "WHISPER_NO_ONE_LEFT_IN_RAIN",
       "description": "În acest sistem, orice ființă găsită singură într-o ‘furtună’ (metaforică sau reală) este ajutată, hrănită și ghidată spre adăpost.",
       "createdFromEventId": "DOG_IN_RAIN_2025_12_03",
       "antecedent": "sceneDescription CONȚINE 'rătăcit' OR 'ploaie' OR 'singur_afara'",

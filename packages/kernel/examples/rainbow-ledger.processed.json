@@ -58,15 +58,15 @@
     },
     {
       "layer": "L7_KERNEL",
-      "title": "Kernel / Reguli",
-      "description": "Kernel scrie regula: fondurile Lightning sunt dedicate explorării și învățării, în acord cu familia.",
+      "title": "Kernel / Whisper",
+      "description": "Whisper: fondurile Lightning sunt dedicate explorării și învățării, în acord cu familia.",
       "status": "final"
     }
   ],
   "kernelRule": {
-    "id": "RULE_18_LIGHTNING_FUNDS_ARE_FOR_GROWTH",
-    "title": "Lightning funds are for growth",
-    "text": "Când un tânăr Lightning deține resurse proprii, sistemul tratează acei bani ca energie de explorare și învățare. Deciziile se iau împreună, dar demnitatea financiară rămâne a lui.",
+    "id": "WHISPER_LIGHTNING_FUNDS_GROWTH",
+    "title": "Whisper: Lightning funds grow gently",
+    "text": "Când un tânăr Lightning deține resurse proprii, sistemul tratează acei bani ca energie de explorare și învățare. Deciziile se iau împreună, demnitatea financiară rămâne a lui, creșterea se face cu blândețe.",
     "layersAffected": [
       "L2_EMOTIONAL",
       "L3_MENTAL_MAP",
