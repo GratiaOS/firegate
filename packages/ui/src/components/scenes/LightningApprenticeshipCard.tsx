@@ -1,5 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import type { FieldState, KernelEvent, LayerState, ReligareRule } from '../../../../kernel/src/types';
+import type {
+  FieldState,
+  KernelEvent,
+  KernelLayerId,
+  LayerState,
+  ReligareRule,
+} from '../../../../kernel/src/types';
 import processedSceneJson from '../../../../kernel/examples/apprenticeship.processed.json' with { type: 'json' };
 import { GratiaFridgeCard } from './GratiaFridgeCard';
 import { KernelTraceView } from './KernelTraceView';
@@ -71,6 +77,14 @@ export const LightningApprenticeshipCard: React.FC = () => {
   }, []);
 
   const traceScene = useMemo(() => {
+    const asVibe = (value?: string): FieldState['vibe'] => {
+      const upper = value?.toUpperCase();
+      if (upper === 'CALM' || upper === 'CALM_EXPANSION' || upper === 'COHERENT_PRESENCE') return 'CALM';
+      if (upper === 'TENSION') return 'TENSION';
+      if (upper === 'EXPANSION') return 'EXPANSION';
+      return 'FLUX';
+    };
+
     const event: KernelEvent = {
       id: processedScene.sceneId,
       trigger: 'SENSORY',
@@ -112,6 +126,8 @@ export const LightningApprenticeshipCard: React.FC = () => {
               "description CONȚINE 'young lightning' OR 'apprentice' AND field includes 'guardian_present'",
             consequent: "Field.vibe = 'COHERENT_PRESENCE'; Identity.state = 'Agency';",
             layersAffected: processedScene.kernelRule.layersAffected
+              ?.map((id) => mapLayerId(id) as KernelLayerId)
+              .filter(Boolean) as KernelLayerId[]
           }
         ]
       : [];
@@ -120,15 +136,15 @@ export const LightningApprenticeshipCard: React.FC = () => {
     if (processedScene.fieldShift?.from) {
       fieldSnapshots.push({
         timestamp: processedScene.processedAt,
-        vibe: processedScene.fieldShift.from.vibe ?? 'NEUTRAL',
-        activePatterns: processedScene.fieldShift.from.keywords
+        vibe: asVibe(processedScene.fieldShift.from.vibe),
+        activePatterns: processedScene.fieldShift.from.keywords ?? []
       });
     }
     if (processedScene.fieldShift?.to) {
       fieldSnapshots.push({
         timestamp: processedScene.processedAt,
-        vibe: processedScene.fieldShift.to.vibe ?? 'COHERENT_PRESENCE',
-        activePatterns: processedScene.fieldShift.to.keywords
+        vibe: asVibe(processedScene.fieldShift.to.vibe),
+        activePatterns: processedScene.fieldShift.to.keywords ?? []
       });
     }
 
