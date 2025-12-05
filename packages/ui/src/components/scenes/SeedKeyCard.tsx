@@ -6,8 +6,15 @@ interface SeedKeyCardProps {
 }
 
 const SeedKeyCard: React.FC<SeedKeyCardProps> = ({ onClickKernelTrace }) => {
+  const clickable = Boolean(onClickKernelTrace);
+
   return (
-    <div className="relative w-80 bg-[#fdfbf7] rounded-xl shadow-[2px_4px_16px_rgba(0,0,0,0.08)] border border-[#e8e4dc] p-6 mx-auto font-serif rotate-1 hover:rotate-0 transition-transform duration-300 cursor-pointer">
+    <div
+      className={`relative w-80 bg-[#fdfbf7] rounded-xl shadow-[2px_4px_16px_rgba(0,0,0,0.08)] border border-[#e8e4dc] p-6 mx-auto font-serif rotate-1 hover:rotate-0 transition-transform duration-300 ${
+        clickable ? 'cursor-pointer' : ''
+      }`}
+      onClick={clickable ? onClickKernelTrace : undefined}
+    >
       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
         <button
           type="button"
