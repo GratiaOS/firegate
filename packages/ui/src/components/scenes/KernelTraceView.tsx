@@ -5,6 +5,7 @@ import type {
   KernelWhisper,
   LayerState,
 } from '../../../../kernel/src/types';
+import { LightningStackWalkerBadge } from '../badges/LightningStackWalkerBadge';
 
 type ProcessedScene = {
   event: KernelEvent;
@@ -33,6 +34,34 @@ const LAYER_LABEL: Record<LayerState['layer'], string> = {
   L6_FIELD: 'Câmp',
   L7_KERNEL: 'Kernel / Whisper',
 };
+
+const PERSONAS: Record<
+  string,
+  { name: string; subtitle?: string; badgeLightning?: boolean }
+> = {
+  nicolas: { name: 'Nicolas', subtitle: 'Young Lightning · Stack walker', badgeLightning: true },
+  n: { name: 'Nicolas', subtitle: 'Young Lightning · Stack walker', badgeLightning: true },
+  N: { name: 'Nicolas', subtitle: 'Young Lightning · Stack walker', badgeLightning: true },
+  razvan: { name: 'Razvan', subtitle: 'Roots · Kernel caretaker' },
+  raz: { name: 'Razvan', subtitle: 'Roots · Kernel caretaker' },
+  sawsan: { name: 'Sawsan', subtitle: 'Water · Field healer' },
+  guest: { name: 'Guest', subtitle: 'Visiting presence' },
+};
+
+function renderActor(actor: string) {
+  const persona = PERSONAS[actor] ?? PERSONAS[actor.toLowerCase()] ?? null;
+  if (!persona) {
+    return <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200">{actor}</span>;
+  }
+
+  return (
+    <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200 inline-flex items-center gap-1">
+      <span>{persona.name}</span>
+      {persona.badgeLightning && <LightningStackWalkerBadge size="sm" />}
+      {persona.subtitle && <span className="text-[10px] text-slate-400">· {persona.subtitle}</span>}
+    </span>
+  );
+}
 
 export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
   const mainWhisper = (scene.whispers ?? scene.rules ?? [])[0];
@@ -70,12 +99,7 @@ export function KernelTraceView({ scene }: { scene: ProcessedScene }) {
           {scene.event.context.actors && (
             <div className="mt-2 flex flex-wrap gap-1">
               {scene.event.context.actors.map((actor: string) => (
-                <span
-                  key={actor}
-                  className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200"
-                >
-                  {actor}
-                </span>
+                <React.Fragment key={actor}>{renderActor(actor)}</React.Fragment>
               ))}
             </div>
           )}
