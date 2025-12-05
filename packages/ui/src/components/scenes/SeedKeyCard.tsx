@@ -12,7 +12,7 @@ const SeedKeyCard: React.FC<SeedKeyCardProps> = ({ onClickKernelTrace }) => {
         <button
           type="button"
           onClick={onClickKernelTrace}
-          className="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full border border-purple-200 shadow-sm flex items-center gap-1"
+          className="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full border border-purple-200 shadow-sm flex items-center gap-1 cursor-pointer"
         >
           <Sparkles className="w-3 h-3" />
           Kernel whisper
