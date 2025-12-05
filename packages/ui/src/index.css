@@ -7,6 +7,47 @@
 @import './styles/theme.css';
 @import 'tw-animate-css';
 
+/* Skin field — bază vizuală globală */
+:root {
+  --skin-bg: var(--tone-surface);
+  --skin-card: color-mix(in oklab, var(--tone-surface) 90%, black 10%);
+  --skin-accent: var(--accent);
+}
+
+:root[data-skin-id='SUN'] {
+  --skin-bg: #fff9ed;
+  --skin-card: #fff3db;
+  --skin-accent: #f6b74b;
+}
+
+:root[data-skin-id='MOON'] {
+  --skin-bg: #050816;
+  --skin-card: #0b1024;
+  --skin-accent: #7dd3fc;
+}
+
+:root[data-skin-id='GARDEN'] {
+  --skin-bg: #f5fbf5;
+  --skin-card: #e8f3e9;
+  --skin-accent: #7cb27c;
+}
+
+:root[data-skin-id='STELLAR'] {
+  --skin-bg: #070315;
+  --skin-card: #0f0a22;
+  --skin-accent: #a855f7;
+}
+
+:root[data-skin-id='OFF'] {
+  --skin-bg: var(--tone-surface);
+  --skin-card: color-mix(in oklab, var(--tone-surface) 88%, black 12%);
+  --skin-accent: var(--accent);
+}
+
+body {
+  background: var(--skin-bg);
+}
+
 /* Light Theme */
 :root {
   --background: oklch(1 0 0);

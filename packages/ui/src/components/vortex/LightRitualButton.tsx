@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSkinField } from '@/skin/SkinFieldContext';
 
 interface LightRitualButtonProps {
   onLight?: () => void;
@@ -11,6 +12,7 @@ interface LightRitualButtonProps {
  * - Whisper appears after ~1s
  */
 const LightRitualButton: React.FC<LightRitualButtonProps> = ({ onLight }) => {
+  const { setSkinId, skinId } = useSkinField();
   const [isLit, setIsLit] = useState(false);
   const [prePulse, setPrePulse] = useState(false);
   const [showWhisper, setShowWhisper] = useState(false);
@@ -50,7 +52,12 @@ const LightRitualButton: React.FC<LightRitualButtonProps> = ({ onLight }) => {
 
         <button
           type="button"
-          onClick={() => setIsLit(true)}
+          onClick={() => {
+            if (skinId !== 'SUN') {
+              setSkinId('SUN');
+            }
+            setIsLit(true);
+          }}
           className={`relative z-[1] w-full rounded-[22px] px-5 py-3 text-sm font-semibold tracking-wide transition-all duration-400 shadow-[0_0_12px_rgba(0,0,0,0.28)] focus:outline-none focus:ring-2 focus:ring-amber-200/60 focus:ring-offset-2 focus:ring-offset-transparent
             ${
               isLit
