@@ -3,6 +3,7 @@ import { DogInRainCard } from '@/components/scenes/DogInRainCard';
 import { LightningApprenticeshipCard } from '@/components/scenes/LightningApprenticeshipCard';
 import SeedKeyCard from '@/components/scenes/SeedKeyCard';
 import KernelTraceYoungLightning from '@/components/scenes/KernelTraceYoungLightning';
+import RootsKernelCard from '@/components/scenes/RootsKernelCard';
 
 export default function Scenes() {
   const [trace, setTrace] = useState<'young-lightning' | null>(null);
@@ -21,6 +22,7 @@ export default function Scenes() {
       <div className="grid gap-8 w-full max-w-5xl">
         <DogInRainCard />
         <LightningApprenticeshipCard />
+        <RootsKernelCard />
         <SeedKeyCard onClickKernelTrace={() => setTrace('young-lightning')} />
       </div>
 
