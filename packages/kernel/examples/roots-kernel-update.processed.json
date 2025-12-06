@@ -1,0 +1,86 @@
+{
+  "sceneId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+  "timestamp": "2025-12-06T09:52:00+01:00",
+  "location": {
+    "plusCode": "6V75+GH Casbas de Huesca",
+    "context": "Firegate /scenes · Witnessed by Roots"
+  },
+  "actors": [
+    { "id": "raz_roots", "role": "ROOTS", "note": "martor semnat" }
+  ],
+  "scene": {
+    "title": "Kernel update · Witnessed by Roots",
+    "shortDescription": "Respirație adâncă, aprins lumina, kernel-ul scrie: /scenes are și urmează scena ta.",
+    "tags": ["kernel_update", "roots", "witness"]
+  },
+  "layerStates": [
+    {
+      "layer": "L1_LOCAL",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Respirație adâncă, buton apăsat fără grabă.",
+      "data": {
+        "sensations": ["aer rece", "corp relaxat"],
+        "actions": ["aprins lumina"]
+      }
+    },
+    {
+      "layer": "L2_EMOTIONAL",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Calm + bucurie de echipă (Antonio mode).",
+      "data": {
+        "feelings": ["calm", "bucurie"],
+        "intensity": 5
+      }
+    },
+    {
+      "layer": "L3_MENTAL",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Kernel update + Kernel Trace puse în /scenes.",
+      "data": {
+        "thoughts": ["scena mea intră în galerie"],
+        "decisions": ["mai adaug un trace când sunt gata"]
+      }
+    },
+    {
+      "layer": "L5_TRANSGENERATIONAL",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Martor semnat: schimbarea e scrisă de noi, nu de altcineva.",
+      "data": {
+        "patternDetected": "control_perfect" ,
+        "actionTaken": "cedare_blândă"
+      }
+    },
+    {
+      "layer": "L6_FIELD",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Câmpul simte că /scenes au și scena Roots; fluxul e complet.",
+      "data": {
+        "vibe": "CALM",
+        "activePatterns": ["family_stack_shared"]
+      }
+    },
+    {
+      "layer": "L7_KERNEL",
+      "eventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+      "summary": "Whisper scris: schimbările mari pot fi marcate blând (— devine -).",
+      "data": {
+        "newRules": [
+          {
+            "ruleId": "WHISPER_DAWN_TRANSMISSION_SOFT_MARK",
+            "description": "Când simți că ceva s-a schimbat, poți marca cu un gest mic. Cel mai deștept cedează primul, fără să abandoneze adevărul interior.",
+            "createdFromEventId": "ROOTS_KERNEL_UPDATE_2025_12_06",
+            "layersAffected": [
+              "L1_LOCAL",
+              "L2_EMOTIONAL",
+              "L3_MENTAL",
+              "L5_TRANSGENERATIONAL",
+              "L6_FIELD",
+              "L7_KERNEL"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "processingStatus": "L7_WHISPER_WRITTEN"
+}
