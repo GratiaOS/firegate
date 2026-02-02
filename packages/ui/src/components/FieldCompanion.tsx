@@ -21,6 +21,7 @@ const idleWhispers = [
 export const FieldCompanion = () => {
   const [currentWhisper, setCurrentWhisper] = useState(activeWhispers[0]);
   const [isIdle, setIsIdle] = useState(false);
+  const isBreatheFirst = currentWhisper === activeWhispers[0];
 
   useEffect(() => {
     let idleTimer: ReturnType<typeof setTimeout>;
@@ -63,7 +64,13 @@ export const FieldCompanion = () => {
 
   return (
     <div className="field-companion text-white/70 bg-white/10">
-      <p>{currentWhisper}</p>
+      <p
+        className={`field-companion__whisper${
+          isBreatheFirst ? ' field-companion__whisper--breathe' : ''
+        }`}
+      >
+        {currentWhisper}
+      </p>
     </div>
   );
 };
