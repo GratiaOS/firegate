@@ -34,9 +34,9 @@ import translations from '@shared/i18n';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import { useLang } from '@shared/LangContext';
-import { inferTags } from '@shared/metadataHelpers';
 import { useNovaTranslate } from '@/hooks/useNovaTranslate';
 import RecentLogsDrawer from '@/components/RecentLogsDrawer';
+import memoryAspects from './memory_aspects.json';
 
 interface ChatMessage {
   role: 'user' | 'nova';
@@ -54,6 +54,67 @@ interface NovaResponse {
   level: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE';
   reason: string;
 }
+
+interface MemoryAspect {
+  aspect_id: string;
+  resonance: 'YELLOW' | 'ROSE' | 'WHITE';
+  static_level: number;
+  is_locked: boolean;
+  content_hash: string;
+  release_trigger: string;
+}
+
+const HOLD_TO_RETURN_MS = 1200;
+
+const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
+
+const inferStaticLevel = (text: string): number => {
+  const normalized = text.trim();
+  if (!normalized) return 0;
+  const upperChars = normalized.replace(/[^A-Z]/g, '').length;
+  const exclamationBoost = (normalized.match(/!/g) || []).length * 0.08;
+  const uppercaseRatio = upperChars / Math.max(normalized.length, 1);
+  return clamp01(uppercaseRatio + exclamationBoost);
+};
+
+const cityPromptByLang: Record<string, string> = {
+  ro: 'O frază: ce simți în corp? Apoi: un pas mic azi.',
+  es: 'Una frase: ¿qué sientes en el cuerpo? Luego: un paso pequeño hoy.',
+  en: 'One sentence: what do you feel in your body? Then: one small step today.',
+};
+
+const cityResponseContractByLang: Record<string, string> = {
+  ro: [
+    'Răspunde strict în 4 puncte, în română:',
+    '1. Observație: ...',
+    '2. Semnal corporal: ...',
+    '3. Pas mic: ...',
+    '4. Închidere: Gata.',
+    'Fără metafore lungi. Fără întrebări-test. Fără limbaj de frecvențe.',
+  ].join('\n'),
+  es: [
+    'Responde solo en 4 puntos, en español:',
+    '1. Observación: ...',
+    '2. Señal corporal: ...',
+    '3. Paso pequeño: ...',
+    '4. Cierre: Listo.',
+    'Sin metáforas largas. Sin preguntas-test. Sin lenguaje de frecuencia.',
+  ].join('\n'),
+  en: [
+    'Reply in exactly 4 points, in English:',
+    '1. Observation: ...',
+    '2. Body signal: ...',
+    '3. Small step: ...',
+    '4. Close: Done.',
+    'No long metaphors. No test questions. No frequency language.',
+  ].join('\n'),
+};
+
+const cityTagsByLang: Record<string, string[]> = {
+  ro: ['corp', 'pas', 'claritate', 'azi'],
+  es: ['cuerpo', 'paso', 'claridad', 'hoy'],
+  en: ['body', 'step', 'clarity', 'today'],
+};
 
 // Type for recent logs fetched from Firestore
 interface RecentLog {
@@ -75,8 +136,20 @@ const Firegate: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [recentLogs, setRecentLogs] = useState<RecentLog[]>([]);
+  const [staticLevel, setStaticLevel] = useState<number>(
+    clamp01(
+      ((memoryAspects as MemoryAspect[]).reduce((acc, aspect) => acc + aspect.static_level, 0) || 0) /
+        Math.max((memoryAspects as MemoryAspect[]).length, 1)
+    )
+  );
+  const [isFearLock, setIsFearLock] = useState<boolean>(false);
+  const [holdProgress, setHoldProgress] = useState<number>(0);
+  const [isHoldingReturn, setIsHoldingReturn] = useState<boolean>(false);
   const isInitialMount = useRef<boolean>(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const holdTimeoutRef = useRef<number | null>(null);
+  const holdRafRef = useRef<number | null>(null);
+  const holdStartRef = useRef<number>(0);
   const { uiLang } = useLang();
   const { translate: novaTranslate } = useNovaTranslate();
 
@@ -158,6 +231,43 @@ const Firegate: FC = () => {
     setMessages((prev) => [...prev, { role: 'user', content }]);
   };
 
+  const returnToBody = (): void => {
+    setStaticLevel(0);
+    setIsFearLock(false);
+    setIsHoldingReturn(false);
+    setHoldProgress(0);
+  };
+
+  const cancelHoldReturn = (): void => {
+    if (holdTimeoutRef.current) {
+      window.clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+    if (holdRafRef.current) {
+      window.cancelAnimationFrame(holdRafRef.current);
+      holdRafRef.current = null;
+    }
+    setIsHoldingReturn(false);
+    setHoldProgress(0);
+  };
+
+  const startHoldReturn = (): void => {
+    setIsHoldingReturn(true);
+    holdStartRef.current = Date.now();
+
+    const tick = (): void => {
+      const elapsed = Date.now() - holdStartRef.current;
+      setHoldProgress(clamp01(elapsed / HOLD_TO_RETURN_MS));
+      holdRafRef.current = window.requestAnimationFrame(tick);
+    };
+
+    holdRafRef.current = window.requestAnimationFrame(tick);
+    holdTimeoutRef.current = window.setTimeout(() => {
+      returnToBody();
+      cancelHoldReturn();
+    }, HOLD_TO_RETURN_MS);
+  };
+
   const appendNovaMessage = (
     content: string,
     tags?: string[],
@@ -185,13 +295,26 @@ const Firegate: FC = () => {
     const promptText = input.trim();
     if (!promptText) return;
 
+    const computedStatic = inferStaticLevel(promptText);
+    setStaticLevel((prev) => clamp01(prev * 0.55 + computedStatic * 0.45));
+    setIsFearLock(computedStatic >= 0.55);
+
     appendUserMessage(promptText);
     setInput('');
     setIsLoading(true);
 
     try {
-      const { reply, level, reason } = await callNovaApi(promptText);
-      const tagsArr = inferTags(promptText);
+      const langKey = uiLang in cityResponseContractByLang ? uiLang : 'en';
+      const contractedPrompt = [
+        cityPromptByLang[langKey],
+        '',
+        cityResponseContractByLang[langKey],
+        '',
+        `Input user: ${promptText}`,
+      ].join('\n');
+
+      const { reply, level, reason } = await callNovaApi(contractedPrompt);
+      const tagsArr = cityTagsByLang[langKey] || cityTagsByLang.en;
       const langDetected = detectLang(reply);
       const translated = await translateText(reply);
 
@@ -312,8 +435,31 @@ const Firegate: FC = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (holdTimeoutRef.current) window.clearTimeout(holdTimeoutRef.current);
+      if (holdRafRef.current) window.cancelAnimationFrame(holdRafRef.current);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col h-full">
+    <div
+      className="flex flex-col h-full"
+      style={{ transition: `all ${isFearLock ? 650 : 300}ms ease-out` }}
+    >
+      {staticLevel > 0.05 ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-50"
+          style={{
+            opacity: clamp01(staticLevel * 0.22),
+            backgroundImage:
+              'repeating-linear-gradient(0deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px), repeating-linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04) 1px, rgba(255,255,255,0.04) 2px, rgba(255,255,255,0.04) 3px)',
+            mixBlendMode: 'overlay',
+            filter: 'blur(0.2px)',
+          }}
+        />
+      ) : null}
       <div className="flex flex-col flex-1 max-w-3xl mx-auto">
         <div className="flex-1 overflow-y-auto p-6">
           <h1 className="text-2xl font-bold text-center text-amber-600 font-serif">
@@ -449,6 +595,37 @@ const Firegate: FC = () => {
         </div>
         {/* Input area fixed at bottom */}
         <div className="border-t p-6">
+          <div className="mb-3">
+            <div
+              className="relative inline-flex cursor-pointer select-none items-center text-sm italic text-amber-500/90"
+              onPointerDown={startHoldReturn}
+              onPointerUp={cancelHoldReturn}
+              onPointerCancel={cancelHoldReturn}
+              onPointerLeave={cancelHoldReturn}
+              role="button"
+              tabIndex={0}
+              aria-label="Hold to return to body"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') startHoldReturn();
+              }}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') cancelHoldReturn();
+              }}
+            >
+              {labels.breatheFirst}
+              <span
+                aria-hidden="true"
+                className="absolute -inset-2 rounded-full border border-[#C9A56B]/40"
+                style={{
+                  opacity: isHoldingReturn ? 1 : 0,
+                  transform: `scale(${0.98 + holdProgress * 0.05})`,
+                  boxShadow: '0 0 10px rgba(201,165,107,0.18)',
+                  transition: 'opacity 120ms ease-out, transform 120ms ease-out',
+                }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-amber-500/80">{labels.citySeedPrompt}</p>
+          </div>
           <div className="flex flex-col space-y-2">
             <Textarea
               rows={3}

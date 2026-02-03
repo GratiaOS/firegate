@@ -1,0 +1,26 @@
+[
+  {
+    "aspect_id": "seed-yellow-anchor",
+    "resonance": "YELLOW",
+    "static_level": 0.08,
+    "is_locked": false,
+    "content_hash": "anchor-level-21",
+    "release_trigger": "somatic_breath_4.5s"
+  },
+  {
+    "aspect_id": "seed-rose-bridge",
+    "resonance": "ROSE",
+    "static_level": 0.28,
+    "is_locked": false,
+    "content_hash": "bridge-level-28",
+    "release_trigger": "somatic_breath_4.5s"
+  },
+  {
+    "aspect_id": "seed-white-release",
+    "resonance": "WHITE",
+    "static_level": 0.04,
+    "is_locked": false,
+    "content_hash": "unity-level-49",
+    "release_trigger": "somatic_breath_4.5s"
+  }
+]

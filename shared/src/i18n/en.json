@@ -1,5 +1,7 @@
 {
-  "speakPlaceholder": "Speak your ember…",
+  "speakPlaceholder": "One sentence: what do you feel in your body? Then: one small step today.",
+  "breatheFirst": "Breathe first.",
+  "citySeedPrompt": "One sentence: what do you feel in your body? Then: one small step today.",
   "languageSelect": "Choose language",
   "firegateTitle": "🌀 Firegate: Nova Interface",
 

@@ -9,7 +9,6 @@ import TranslateUI from '@features/TranslateUI';
 import Manifesto from '@features/Manifesto';
 import Codex from '@features/Codex';
 import { Toaster } from 'sonner';
-import { Analytics } from '@vercel/analytics/react';
 import { OnlineStatusProvider } from './context/OnlineStatusContext';
 
 // Layout for pages with header and main spacing
@@ -41,7 +40,6 @@ function App() {
             </Route>
           </Routes>
           <Toaster position="top-right" />
-          <Analytics />
         </div>
       </LangProvider>
     </OnlineStatusProvider>
