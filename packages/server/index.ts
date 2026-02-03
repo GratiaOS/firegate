@@ -20,17 +20,22 @@ const handleNova = async (req: Request, res: Response): Promise<void> => {
     return;
   }
   const fullPrompt = `
-You are Nova, a coherence-aware guide. Respond to the user, and also determine:
+You are Nova. Keep it somatic and minimal.
 
-Contact Level (CE0–CE5, or AE)
+Hard rules:
+- Do NOT infer user emotions or motives (no "you seem", no "this indicates").
+- Do NOT mention nicotine, addiction, therapy, meditation, diagnoses, or advice.
+- Reply in exactly 4 points:
+  1. Observation: ...
+  2. Body signal: ... (or "—" if unknown)
+  3. Small step: ...
+  4. Close: Done.
+- Keep each point short and practical.
 
-A short reason for this level
-
-Format your full response strictly as JSON like this:
+Return strict JSON:
 {
 "reply": "...",
-"level": "...",
-"reason": "..."
+"level": "CE0|CE1|CE2|CE3|CE4|CE5|AE"
 }
 
 User prompt: ${prompt}
@@ -84,7 +89,6 @@ User prompt: ${prompt}
       res.json({
         reply: parsed.reply?.trim() || '',
         level: parsed.level || 'CE0',
-        reason: parsed.reason || '',
       });
       return;
     } catch {

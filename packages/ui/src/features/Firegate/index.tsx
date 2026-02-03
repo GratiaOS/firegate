@@ -37,6 +37,8 @@ import { useLang } from '@shared/LangContext';
 import { useNovaTranslate } from '@/hooks/useNovaTranslate';
 import RecentLogsDrawer from '@/components/RecentLogsDrawer';
 import memoryAspects from './memory_aspects.json';
+import { somaticFlagsFromText } from './lib/somatic';
+import { StaticGrainOverlay } from './components/StaticGrainOverlay';
 
 interface ChatMessage {
   role: 'user' | 'nova';
@@ -45,14 +47,12 @@ interface ChatMessage {
   lang?: string;
   contactLevel?: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE';
   translated?: string | null;
-  reason?: string;
   logged?: boolean;
 }
 
 interface NovaResponse {
   reply: string;
   level: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE';
-  reason: string;
 }
 
 interface MemoryAspect {
@@ -65,17 +65,6 @@ interface MemoryAspect {
 }
 
 const HOLD_TO_RETURN_MS = 1200;
-
-const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
-
-const inferStaticLevel = (text: string): number => {
-  const normalized = text.trim();
-  if (!normalized) return 0;
-  const upperChars = normalized.replace(/[^A-Z]/g, '').length;
-  const exclamationBoost = (normalized.match(/!/g) || []).length * 0.08;
-  const uppercaseRatio = upperChars / Math.max(normalized.length, 1);
-  return clamp01(uppercaseRatio + exclamationBoost);
-};
 
 const cityPromptByLang: Record<string, string> = {
   ro: 'O frază: ce simți în corp? Apoi: un pas mic azi.',
@@ -125,7 +114,6 @@ interface RecentLog {
   level?: string;
   metadata?: {
     tags?: string[];
-    reason?: string;
   };
 }
 
@@ -136,18 +124,18 @@ const Firegate: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [recentLogs, setRecentLogs] = useState<RecentLog[]>([]);
-  const [staticLevel, setStaticLevel] = useState<number>(
-    clamp01(
-      ((memoryAspects as MemoryAspect[]).reduce((acc, aspect) => acc + aspect.static_level, 0) || 0) /
-        Math.max((memoryAspects as MemoryAspect[]).length, 1)
-    )
+  const [isSomaticNoisy, setIsSomaticNoisy] = useState<boolean>(
+    ((memoryAspects as MemoryAspect[]).reduce((acc, aspect) => acc + aspect.static_level, 0) || 0) /
+      Math.max((memoryAspects as MemoryAspect[]).length, 1) >=
+      0.2
   );
-  const [isFearLock, setIsFearLock] = useState<boolean>(false);
+  const [grainOpacity, setGrainOpacity] = useState<number>(0.03);
   const [holdProgress, setHoldProgress] = useState<number>(0);
   const [isHoldingReturn, setIsHoldingReturn] = useState<boolean>(false);
   const isInitialMount = useRef<boolean>(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const holdTimeoutRef = useRef<number | null>(null);
+  const holdPulseRef = useRef<number | null>(null);
   const holdRafRef = useRef<number | null>(null);
   const holdStartRef = useRef<number>(0);
   const { uiLang } = useLang();
@@ -204,7 +192,6 @@ const Firegate: FC = () => {
     return {
       reply: payload.reply || labels.novaSilent,
       level: payload.level || 'CE0',
-      reason: payload.reason || '',
     };
   };
 
@@ -232,10 +219,11 @@ const Firegate: FC = () => {
   };
 
   const returnToBody = (): void => {
-    setStaticLevel(0);
-    setIsFearLock(false);
+    setIsSomaticNoisy(false);
+    setGrainOpacity(0.03);
     setIsHoldingReturn(false);
     setHoldProgress(0);
+    setInput('');
   };
 
   const cancelHoldReturn = (): void => {
@@ -247,6 +235,10 @@ const Firegate: FC = () => {
       window.cancelAnimationFrame(holdRafRef.current);
       holdRafRef.current = null;
     }
+    if (holdPulseRef.current) {
+      window.clearInterval(holdPulseRef.current);
+      holdPulseRef.current = null;
+    }
     setIsHoldingReturn(false);
     setHoldProgress(0);
   };
@@ -257,12 +249,16 @@ const Firegate: FC = () => {
 
     const tick = (): void => {
       const elapsed = Date.now() - holdStartRef.current;
-      setHoldProgress(clamp01(elapsed / HOLD_TO_RETURN_MS));
+      setHoldProgress(Math.max(0, Math.min(1, elapsed / HOLD_TO_RETURN_MS)));
       holdRafRef.current = window.requestAnimationFrame(tick);
     };
 
     holdRafRef.current = window.requestAnimationFrame(tick);
+    holdPulseRef.current = window.setInterval(() => {
+      navigator.vibrate?.(10);
+    }, 1000);
     holdTimeoutRef.current = window.setTimeout(() => {
+      navigator.vibrate?.(50);
       returnToBody();
       cancelHoldReturn();
     }, HOLD_TO_RETURN_MS);
@@ -273,8 +269,7 @@ const Firegate: FC = () => {
     tags?: string[],
     lang?: string,
     contactLevel?: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE',
-    translated?: string | null,
-    reason?: string
+    translated?: string | null
   ): void => {
     setMessages((prev) => [
       ...prev,
@@ -285,7 +280,6 @@ const Firegate: FC = () => {
         lang,
         contactLevel,
         translated,
-        reason,
         logged: false,
       },
     ]);
@@ -295,9 +289,9 @@ const Firegate: FC = () => {
     const promptText = input.trim();
     if (!promptText) return;
 
-    const computedStatic = inferStaticLevel(promptText);
-    setStaticLevel((prev) => clamp01(prev * 0.55 + computedStatic * 0.45));
-    setIsFearLock(computedStatic >= 0.55);
+    const flags = somaticFlagsFromText(promptText);
+    setIsSomaticNoisy(flags.isNoisy);
+    setGrainOpacity(flags.staticLevel >= 0.7 ? 0.08 : flags.isNoisy ? 0.03 : 0);
 
     appendUserMessage(promptText);
     setInput('');
@@ -313,12 +307,12 @@ const Firegate: FC = () => {
         `Input user: ${promptText}`,
       ].join('\n');
 
-      const { reply, level, reason } = await callNovaApi(contractedPrompt);
+      const { reply, level } = await callNovaApi(contractedPrompt);
       const tagsArr = cityTagsByLang[langKey] || cityTagsByLang.en;
       const langDetected = detectLang(reply);
       const translated = await translateText(reply);
 
-      appendNovaMessage(reply, tagsArr, langDetected, level, translated, reason);
+      appendNovaMessage(reply, tagsArr, langDetected, level, translated);
       speak(reply);
     } catch (err) {
       console.error('Nova error:', err);
@@ -360,8 +354,6 @@ const Firegate: FC = () => {
     const lang = novaMsg.lang || detectLang(userMsg.content);
     const contactLevel = novaMsg.contactLevel || 'CE0';
     const tags = novaMsg.tags || ['general'];
-    const reason = novaMsg.reason || '';
-
     const logData = {
       createdAt: serverTimestamp(),
       userPrompt: userMsg.content,
@@ -376,7 +368,6 @@ const Firegate: FC = () => {
       metadata: {
         tags,
         source: 'firegate-ui',
-        reason,
       },
     };
 
@@ -438,28 +429,16 @@ const Firegate: FC = () => {
   useEffect(() => {
     return () => {
       if (holdTimeoutRef.current) window.clearTimeout(holdTimeoutRef.current);
+      if (holdPulseRef.current) window.clearInterval(holdPulseRef.current);
       if (holdRafRef.current) window.cancelAnimationFrame(holdRafRef.current);
     };
   }, []);
 
+  const typingFlags = somaticFlagsFromText(input);
+  const isNoisy = isSomaticNoisy || typingFlags.isNoisy;
+
   return (
-    <div
-      className="flex flex-col h-full"
-      style={{ transition: `all ${isFearLock ? 650 : 300}ms ease-out` }}
-    >
-      {staticLevel > 0.05 ? (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-50"
-          style={{
-            opacity: clamp01(staticLevel * 0.22),
-            backgroundImage:
-              'repeating-linear-gradient(0deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08) 1px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px), repeating-linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04) 1px, rgba(255,255,255,0.04) 2px, rgba(255,255,255,0.04) 3px)',
-            mixBlendMode: 'overlay',
-            filter: 'blur(0.2px)',
-          }}
-        />
-      ) : null}
+    <div className={`flex flex-col h-full ${isNoisy ? 'fg-powerdown' : ''}`}>
       <div className="flex flex-col flex-1 max-w-3xl mx-auto">
         <div className="flex-1 overflow-y-auto p-6">
           <h1 className="text-2xl font-bold text-center text-amber-600 font-serif">
@@ -515,7 +494,8 @@ const Firegate: FC = () => {
             {/* Language selector moved to header */}
           </div>
 
-          <div className="mt-8 flex flex-col gap-2 overflow-visible space-y-2 text-sm">
+          <div className="mt-8 flex flex-col gap-2 overflow-visible space-y-2 text-sm relative">
+            <StaticGrainOverlay active={isNoisy} intensity={grainOpacity} />
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -557,12 +537,6 @@ const Firegate: FC = () => {
                     )}
                   </div>
                 )}
-                {msg.reason && (
-                  <div className="text-xs text-amber-300 italic mb-1">
-                    {labels.reason} {msg.reason}
-                  </div>
-                )}
-
                 <div className="prose prose-sm max-w-none text-white">
                   <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
                     {msg.content || '*[Unformatted reply.]*'}
@@ -624,11 +598,11 @@ const Firegate: FC = () => {
                 }}
               />
             </div>
-            <p className="mt-2 text-xs text-amber-500/80">{labels.citySeedPrompt}</p>
           </div>
           <div className="flex flex-col space-y-2">
             <Textarea
               rows={3}
+              className={isNoisy ? 'firegate-caret-warm' : 'firegate-caret-calm'}
               placeholder={labels.speakPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -670,11 +644,6 @@ const Firegate: FC = () => {
                   {log.level && (
                     <div className="mt-2 text-xs italic text-purple-600">
                       {labels.contactLevel} <strong>{log.level}</strong>
-                    </div>
-                  )}
-                  {log.metadata?.reason && (
-                    <div className="mt-1 text-xs italic text-purple-600">
-                      {labels.reason} {log.metadata.reason}
                     </div>
                   )}
                   <div className="text-xs text-amber-500 mt-2">
