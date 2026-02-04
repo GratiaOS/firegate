@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
+import rateLimit from 'express-rate-limit';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { homedir } from 'node:os';
@@ -14,6 +15,14 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const vaultResolveLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many vault resolve requests. Please try again later.' },
+});
 
 type SignalStatus = 'normal' | 'preview' | 'soft_stop';
 
@@ -298,8 +307,8 @@ User prompt: ${prompt}
 };
 
 app.post('/api/nova', handleNova);
-app.get('/api/vault/resolve', handleVaultResolve);
-app.post('/api/vault/resolve', handleVaultResolve);
+app.get('/api/vault/resolve', vaultResolveLimiter, handleVaultResolve);
+app.post('/api/vault/resolve', vaultResolveLimiter, handleVaultResolve);
 
 // 🌐 Unified Nova Translate Endpoint (Online + Offline)
 app.post('/api/nova-translate', async (req: Request, res: Response) => {
