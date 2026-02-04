@@ -42,6 +42,8 @@ import {
   SHOUT_STATIC_LEVEL,
 } from './lib/somatic';
 import { StaticGrainOverlay } from './components/StaticGrainOverlay';
+import { SignalQuality, type SignalStatus } from './components/SignalQuality';
+import somaticContent from './somatic_content.json';
 
 interface ChatMessage {
   role: 'user' | 'nova';
@@ -56,12 +58,33 @@ interface ChatMessage {
 interface NovaResponse {
   reply: string;
   level: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE';
+  runtimeDecision?: SignalStatus;
+  somaticScore?: number;
+}
+
+interface VaultResolveResponse {
+  resolved_mode?: 'entry_ref' | 'index_only' | 'index_fallback';
+  runtime_decision: SignalStatus;
+  reasons: string[];
+  effective_gates?: {
+    somatic_min?: number | null;
+    source_min?: number | null;
+    mapping_min?: number | null;
+  };
+  tone_policy?: 'no_claims' | 'minimal' | string;
+  scores?: {
+    somatic?: number | null;
+    source?: number | null;
+    mapping?: number | null;
+    interpretation?: number | null;
+  };
 }
 
 const HOLD_TO_RETURN_MS = 1200;
 const HIGH_STATIC_THRESHOLD = SHOUT_RATIO_THRESHOLD;
 const GRAIN_OPACITY_LOW = 0.03;
 const GRAIN_OPACITY_HIGH = SHOUT_STATIC_LEVEL / 10;
+const SOFT_STOP_SOMATIC_MIN = 0.8;
 
 const cityTagsByLang: Record<string, string[]> = {
   ro: ['corp', 'pas', 'claritate', 'azi'],
@@ -89,14 +112,20 @@ const Firegate: FC = () => {
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [recentLogs, setRecentLogs] = useState<RecentLog[]>([]);
   const [isSomaticNoisy, setIsSomaticNoisy] = useState<boolean>(false);
+  const [somaticStaticLevel, setSomaticStaticLevel] = useState<number>(0);
+  const [runtimeDecision, setRuntimeDecision] = useState<SignalStatus>('normal');
+  const [runtimeSomaticScore, setRuntimeSomaticScore] = useState<number>(1);
+  const [policyTrace, setPolicyTrace] = useState<VaultResolveResponse | null>(null);
+  const [showGateOverlay, setShowGateOverlay] = useState<boolean>(false);
+  const [tipCursor, setTipCursor] = useState<number>(0);
   const [grainOpacity, setGrainOpacity] = useState<number>(0);
   const [holdProgress, setHoldProgress] = useState<number>(0);
   const [isHoldingReturn, setIsHoldingReturn] = useState<boolean>(false);
   const isInitialMount = useRef<boolean>(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const holdTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
-  const holdPulseRef = useRef<ReturnType<typeof window.setInterval> | null>(null);
-  const holdRafRef = useRef<ReturnType<typeof window.requestAnimationFrame> | null>(null);
+  const holdTimeoutRef = useRef<number | null>(null);
+  const holdPulseRef = useRef<number | null>(null);
+  const holdRafRef = useRef<number | null>(null);
   const holdStartRef = useRef<number>(0);
   const { uiLang } = useLang();
   const { translate: novaTranslate } = useNovaTranslate();
@@ -152,7 +181,50 @@ const Firegate: FC = () => {
     return {
       reply: payload.reply || labels.novaSilent,
       level: payload.level || 'CE0',
+      runtimeDecision: payload.runtime_decision || payload.runtimeDecision,
+      somaticScore:
+        typeof payload.somatic_score === 'number'
+          ? payload.somatic_score
+          : typeof payload.somaticScore === 'number'
+            ? payload.somaticScore
+            : undefined,
     };
+  };
+
+  const inferTapeId = (prompt: string): 17 | 29 => {
+    const text = prompt.toLowerCase();
+    if (
+      text.includes('aspect') ||
+      text.includes('aspects') ||
+      text.includes('tape 29') ||
+      text.includes('tape #29')
+    ) {
+      return 29;
+    }
+    return 17;
+  };
+
+  const resolveVaultPolicy = async (prompt: string, somatic: number): Promise<VaultResolveResponse | null> => {
+    try {
+      const tape = inferTapeId(prompt);
+      const res = await fetch('/api/vault/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tape, somatic }),
+      });
+      if (!res.ok) return null;
+      const payload = (await res.json()) as VaultResolveResponse;
+      if (
+        payload.runtime_decision !== 'normal' &&
+        payload.runtime_decision !== 'preview' &&
+        payload.runtime_decision !== 'soft_stop'
+      ) {
+        return null;
+      }
+      return payload;
+    } catch {
+      return null;
+    }
   };
 
   const translateText = async (text: string): Promise<string | null> => {
@@ -186,6 +258,10 @@ const Firegate: FC = () => {
 
   const returnToBody = (): void => {
     setIsSomaticNoisy(false);
+    setSomaticStaticLevel(0);
+    setRuntimeDecision('normal');
+    setRuntimeSomaticScore(1);
+    setPolicyTrace(null);
     setGrainOpacity(0);
     setIsHoldingReturn(false);
     setHoldProgress(0);
@@ -258,7 +334,10 @@ const Firegate: FC = () => {
     if (!promptText) return;
 
     const flags = somaticFlagsFromText(promptText);
+    const promptSomaticScore = Math.max(0, Math.min(1, 1 - flags.staticLevel));
     setIsSomaticNoisy(flags.isNoisy);
+    setSomaticStaticLevel(flags.staticLevel);
+    setRuntimeSomaticScore(promptSomaticScore);
     setGrainOpacity(
       flags.staticLevel >= HIGH_STATIC_THRESHOLD
         ? GRAIN_OPACITY_HIGH
@@ -272,13 +351,36 @@ const Firegate: FC = () => {
     setIsLoading(true);
 
     try {
+      const policy = await resolveVaultPolicy(promptText, promptSomaticScore);
+      if (policy) {
+        setPolicyTrace(policy);
+        setRuntimeDecision(policy.runtime_decision);
+        if (typeof policy.scores?.somatic === 'number') {
+          setRuntimeSomaticScore(Math.max(0, Math.min(1, policy.scores.somatic)));
+        }
+        if (policy.runtime_decision === 'soft_stop') {
+          toast.warning('Static detected. Hold breathe-first to continue.');
+          safeVibrate([20, 40, 20]);
+          return;
+        }
+      }
+
       const langKey = uiLang in cityTagsByLang ? uiLang : 'en';
-      const { reply, level } = await callNovaApi(promptText);
+      const { reply, level, runtimeDecision: novaDecision, somaticScore: novaSomaticScore } =
+        await callNovaApi(promptText);
       const tagsArr = cityTagsByLang[langKey] || cityTagsByLang.en;
       const langDetected = detectLang(reply);
       const translated = await translateText(reply);
 
       appendNovaMessage(reply, tagsArr, langDetected, level, translated);
+      if (novaDecision === 'normal' || novaDecision === 'preview' || novaDecision === 'soft_stop') {
+        setRuntimeDecision(novaDecision);
+      } else {
+        setRuntimeDecision('normal');
+      }
+      if (typeof novaSomaticScore === 'number') {
+        setRuntimeSomaticScore(Math.max(0, Math.min(1, novaSomaticScore)));
+      }
       speak(reply);
     } catch (err) {
       console.error('Nova error:', err);
@@ -402,6 +504,39 @@ const Firegate: FC = () => {
 
   const typingFlags = somaticFlagsFromText(input);
   const isNoisy = isSomaticNoisy || typingFlags.isNoisy;
+  const combinedStaticLevel = Math.max(somaticStaticLevel, typingFlags.staticLevel);
+  const localSomaticScore = Math.max(0, Math.min(1, 1 - combinedStaticLevel));
+  const somaticScore = Math.max(0, Math.min(1, Math.min(localSomaticScore, runtimeSomaticScore)));
+  const signalStatus: SignalStatus =
+    somaticScore < SOFT_STOP_SOMATIC_MIN
+      ? 'soft_stop'
+      : runtimeDecision === 'soft_stop'
+        ? 'soft_stop'
+        : runtimeDecision === 'preview'
+          ? 'preview'
+          : isNoisy
+            ? 'preview'
+            : 'normal';
+  const tipPool =
+    signalStatus === 'soft_stop'
+      ? somaticContent.soft_stop
+      : signalStatus === 'preview'
+        ? somaticContent.preview
+        : [];
+  const activeTip = tipPool.length > 0 ? tipPool[tipCursor % tipPool.length] : null;
+  const gateReasonText = (policyTrace?.reasons ?? []).slice(0, 3).join(' + ');
+  const gateLine =
+    typeof policyTrace?.scores?.somatic === 'number' &&
+    typeof policyTrace?.effective_gates?.somatic_min === 'number' &&
+    signalStatus === 'soft_stop'
+      ? `somatic < gate (${policyTrace.scores.somatic.toFixed(2)} < ${policyTrace.effective_gates.somatic_min.toFixed(2)})`
+      : gateReasonText || 'no_gate_triggered';
+
+  useEffect(() => {
+    if (signalStatus === 'preview' || signalStatus === 'soft_stop') {
+      setTipCursor((prev) => prev + 1);
+    }
+  }, [signalStatus, policyTrace?.runtime_decision]);
 
   return (
     <div className={`flex flex-col h-full ${isNoisy ? 'fg-powerdown' : ''}`}>
@@ -462,6 +597,12 @@ const Firegate: FC = () => {
 
           <div className="mt-8 flex flex-col gap-2 overflow-visible space-y-2 text-sm relative">
             <StaticGrainOverlay active={isNoisy} intensity={grainOpacity} />
+            {signalStatus === 'soft_stop' && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 z-10 rounded-lg bg-rose-300/10 backdrop-blur-[4px] pointer-events-none"
+              />
+            )}
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -503,11 +644,22 @@ const Firegate: FC = () => {
                     )}
                   </div>
                 )}
-                <div className="prose prose-sm max-w-none text-white">
+                <div
+                  className={`prose prose-sm max-w-none text-white transition ${
+                    msg.role === 'nova' && signalStatus === 'soft_stop'
+                      ? 'blur-[4px] select-none pointer-events-none'
+                      : ''
+                  }`}
+                >
                   <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
                     {msg.content || '*[Unformatted reply.]*'}
                   </ReactMarkdown>
                 </div>
+                {msg.role === 'nova' && signalStatus === 'soft_stop' && (
+                  <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-red-200/90">
+                    Static detected. Hold breathe-first to return-to-body.
+                  </div>
+                )}
 
                 <div className="text-xs text-right text-amber-500 italic mt-2">
                   {labels.lastSaved}{' '}
@@ -523,7 +675,13 @@ const Firegate: FC = () => {
                 )}
 
                 {msg.translated && (
-                  <div className="mt-2 text-sm italic text-amber-300 border-t border-amber-300/20 pt-2">
+                  <div
+                    className={`mt-2 text-sm italic text-amber-300 border-t border-amber-300/20 pt-2 transition ${
+                      msg.role === 'nova' && signalStatus === 'soft_stop'
+                        ? 'blur-[4px] select-none pointer-events-none'
+                        : ''
+                    }`}
+                  >
                     {labels.translation}
                     <div className="mt-1 whitespace-pre-wrap">{msg.translated}</div>
                   </div>
@@ -535,7 +693,15 @@ const Firegate: FC = () => {
         </div>
         {/* Input area fixed at bottom */}
         <div className="border-t p-6">
-          <div className="mb-3">
+          {import.meta.env.DEV && showGateOverlay && (
+            <div className="mb-3 rounded border border-white/10 bg-black/60 px-3 py-2 font-mono text-[10px] text-zinc-300">
+              <div className="text-zinc-400">[RESOLVE_LOG]</div>
+              <div>Decision: {runtimeDecision}</div>
+              <div>Reason: {gateLine}</div>
+              <div>Policy: {policyTrace?.tone_policy ?? 'minimal'}</div>
+            </div>
+          )}
+          <div className="mb-3 flex items-center justify-between gap-3">
             <div
               className="relative inline-flex cursor-pointer select-none items-center text-sm italic text-amber-500/90"
               onPointerDown={startHoldReturn}
@@ -564,7 +730,25 @@ const Firegate: FC = () => {
                 }}
               />
             </div>
+            <SignalQuality
+              status={signalStatus}
+              score={somaticScore}
+              onTripleTap={() => {
+                if (import.meta.env.DEV) setShowGateOverlay((prev) => !prev);
+              }}
+            />
           </div>
+          {activeTip && (
+            <div
+              className={`mb-3 rounded border px-3 py-2 text-xs italic ${
+                signalStatus === 'soft_stop'
+                  ? 'border-red-300/30 bg-red-400/10 text-red-100'
+                  : 'border-amber-300/30 bg-amber-400/10 text-amber-100'
+              }`}
+            >
+              {activeTip}
+            </div>
+          )}
           <div className="flex flex-col space-y-2">
             <Textarea
               rows={3}
