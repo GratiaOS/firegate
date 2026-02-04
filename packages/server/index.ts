@@ -92,7 +92,7 @@ User prompt: ${prompt}
       });
       return;
     } catch {
-      res.json({ reply: raw.trim(), level: 'CE0', reason: 'Unparsed fallback' });
+      res.json({ reply: raw.trim(), level: 'CE0' });
       return;
     }
   } catch {

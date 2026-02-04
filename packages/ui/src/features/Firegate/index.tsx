@@ -36,8 +36,11 @@ import rehypeHighlight from 'rehype-highlight';
 import { useLang } from '@shared/LangContext';
 import { useNovaTranslate } from '@/hooks/useNovaTranslate';
 import RecentLogsDrawer from '@/components/RecentLogsDrawer';
-import memoryAspects from './memory_aspects.json';
-import { somaticFlagsFromText } from './lib/somatic';
+import {
+  somaticFlagsFromText,
+  SHOUT_RATIO_THRESHOLD,
+  SHOUT_STATIC_LEVEL,
+} from './lib/somatic';
 import { StaticGrainOverlay } from './components/StaticGrainOverlay';
 
 interface ChatMessage {
@@ -55,49 +58,10 @@ interface NovaResponse {
   level: 'CE0' | 'CE1' | 'CE2' | 'CE3' | 'CE4' | 'CE5' | 'AE';
 }
 
-interface MemoryAspect {
-  aspect_id: string;
-  resonance: 'YELLOW' | 'ROSE' | 'WHITE';
-  static_level: number;
-  is_locked: boolean;
-  content_hash: string;
-  release_trigger: string;
-}
-
 const HOLD_TO_RETURN_MS = 1200;
-
-const cityPromptByLang: Record<string, string> = {
-  ro: 'O frază: ce simți în corp? Apoi: un pas mic azi.',
-  es: 'Una frase: ¿qué sientes en el cuerpo? Luego: un paso pequeño hoy.',
-  en: 'One sentence: what do you feel in your body? Then: one small step today.',
-};
-
-const cityResponseContractByLang: Record<string, string> = {
-  ro: [
-    'Răspunde strict în 4 puncte, în română:',
-    '1. Observație: ...',
-    '2. Semnal corporal: ...',
-    '3. Pas mic: ...',
-    '4. Închidere: Gata.',
-    'Fără metafore lungi. Fără întrebări-test. Fără limbaj de frecvențe.',
-  ].join('\n'),
-  es: [
-    'Responde solo en 4 puntos, en español:',
-    '1. Observación: ...',
-    '2. Señal corporal: ...',
-    '3. Paso pequeño: ...',
-    '4. Cierre: Listo.',
-    'Sin metáforas largas. Sin preguntas-test. Sin lenguaje de frecuencia.',
-  ].join('\n'),
-  en: [
-    'Reply in exactly 4 points, in English:',
-    '1. Observation: ...',
-    '2. Body signal: ...',
-    '3. Small step: ...',
-    '4. Close: Done.',
-    'No long metaphors. No test questions. No frequency language.',
-  ].join('\n'),
-};
+const HIGH_STATIC_THRESHOLD = SHOUT_RATIO_THRESHOLD;
+const GRAIN_OPACITY_LOW = 0.03;
+const GRAIN_OPACITY_HIGH = SHOUT_STATIC_LEVEL / 10;
 
 const cityTagsByLang: Record<string, string[]> = {
   ro: ['corp', 'pas', 'claritate', 'azi'],
@@ -124,19 +88,15 @@ const Firegate: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [recentLogs, setRecentLogs] = useState<RecentLog[]>([]);
-  const [isSomaticNoisy, setIsSomaticNoisy] = useState<boolean>(
-    ((memoryAspects as MemoryAspect[]).reduce((acc, aspect) => acc + aspect.static_level, 0) || 0) /
-      Math.max((memoryAspects as MemoryAspect[]).length, 1) >=
-      0.2
-  );
-  const [grainOpacity, setGrainOpacity] = useState<number>(0.03);
+  const [isSomaticNoisy, setIsSomaticNoisy] = useState<boolean>(false);
+  const [grainOpacity, setGrainOpacity] = useState<number>(0);
   const [holdProgress, setHoldProgress] = useState<number>(0);
   const [isHoldingReturn, setIsHoldingReturn] = useState<boolean>(false);
   const isInitialMount = useRef<boolean>(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const holdTimeoutRef = useRef<number | null>(null);
-  const holdPulseRef = useRef<number | null>(null);
-  const holdRafRef = useRef<number | null>(null);
+  const holdTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const holdPulseRef = useRef<ReturnType<typeof window.setInterval> | null>(null);
+  const holdRafRef = useRef<ReturnType<typeof window.requestAnimationFrame> | null>(null);
   const holdStartRef = useRef<number>(0);
   const { uiLang } = useLang();
   const { translate: novaTranslate } = useNovaTranslate();
@@ -218,9 +178,15 @@ const Firegate: FC = () => {
     setMessages((prev) => [...prev, { role: 'user', content }]);
   };
 
+  const safeVibrate = (pattern: number | number[]): void => {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate(pattern);
+    }
+  };
+
   const returnToBody = (): void => {
     setIsSomaticNoisy(false);
-    setGrainOpacity(0.03);
+    setGrainOpacity(0);
     setIsHoldingReturn(false);
     setHoldProgress(0);
     setInput('');
@@ -244,6 +210,8 @@ const Firegate: FC = () => {
   };
 
   const startHoldReturn = (): void => {
+    if (isHoldingReturn) return;
+    cancelHoldReturn();
     setIsHoldingReturn(true);
     holdStartRef.current = Date.now();
 
@@ -255,10 +223,10 @@ const Firegate: FC = () => {
 
     holdRafRef.current = window.requestAnimationFrame(tick);
     holdPulseRef.current = window.setInterval(() => {
-      navigator.vibrate?.(10);
+      safeVibrate(10);
     }, 1000);
     holdTimeoutRef.current = window.setTimeout(() => {
-      navigator.vibrate?.(50);
+      safeVibrate(50);
       returnToBody();
       cancelHoldReturn();
     }, HOLD_TO_RETURN_MS);
@@ -291,23 +259,21 @@ const Firegate: FC = () => {
 
     const flags = somaticFlagsFromText(promptText);
     setIsSomaticNoisy(flags.isNoisy);
-    setGrainOpacity(flags.staticLevel >= 0.7 ? 0.08 : flags.isNoisy ? 0.03 : 0);
+    setGrainOpacity(
+      flags.staticLevel >= HIGH_STATIC_THRESHOLD
+        ? GRAIN_OPACITY_HIGH
+        : flags.isNoisy
+          ? GRAIN_OPACITY_LOW
+          : 0
+    );
 
     appendUserMessage(promptText);
     setInput('');
     setIsLoading(true);
 
     try {
-      const langKey = uiLang in cityResponseContractByLang ? uiLang : 'en';
-      const contractedPrompt = [
-        cityPromptByLang[langKey],
-        '',
-        cityResponseContractByLang[langKey],
-        '',
-        `Input user: ${promptText}`,
-      ].join('\n');
-
-      const { reply, level } = await callNovaApi(contractedPrompt);
+      const langKey = uiLang in cityTagsByLang ? uiLang : 'en';
+      const { reply, level } = await callNovaApi(promptText);
       const tagsArr = cityTagsByLang[langKey] || cityTagsByLang.en;
       const langDetected = detectLang(reply);
       const translated = await translateText(reply);
@@ -580,7 +546,7 @@ const Firegate: FC = () => {
               tabIndex={0}
               aria-label="Hold to return to body"
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') startHoldReturn();
+                if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) startHoldReturn();
               }}
               onKeyUp={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') cancelHoldReturn();
