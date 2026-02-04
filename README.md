@@ -1,5 +1,12 @@
 # 🔥 Firegate
 
+[![Heartware Compliant](docs/heartware/heartware-badge.svg)](HEARTWARE_MANIFEST.md)
+
+**S‑Edition v0.1.0** — anchored release ✨  
+Repository: https://github.com/GratiaOS/firegate  
+Contact: contact@gratia.space
+Changelog: [CHANGELOG.md](CHANGELOG.md)
+
 **Firegate** is a sacred interface for memory, creation, and conversation.  
 It’s a next-gen journaling and collaborative ritual tool built with:
 
@@ -13,16 +20,14 @@ It’s not just an app. It’s a portal.
 
 ---
 
-## 🚀 April 2025 Update
+## 🚀 Release Notes — S‑Edition v0.1.0
 
-Firegate has officially leveled up. We’ve entered the monorepo era:
-
-- 🔁 Full TypeScript migration — backend, frontend, shared modules.
-- 🌐 Modular i18n layer with real-time Nova translations + editable UI copy.
-- 🛰️ Offline mode with local Mistral fallback (Nova never leaves you stranded).
-- 🛠️ New Codex tools for prompt tuning, language edits, and sacred debugging.
-
-This is more than a project — it’s an invocation.
+- 🧭 Backend‑driven inference & policy gating (Nova‑ready)
+- 🧠 Somatic UX primitives (Breath First, return‑to‑body anchors)
+- 🧬 Confidence‑based content gating (preview / soft‑stop / normal)
+- 🌐 Modular i18n with editable UI copy
+- 🛰️ Offline‑capable Nova fallback (local Mistral)
+- 🛠️ Codex tools for prompt tuning & debugging
 
 ---
 
@@ -46,11 +51,12 @@ Use it to:
 
 ## 🛠 Tech Stack
 
-- TailwindCSS v4 (with `@theme` design tokens)
-- Shadcn UI (theming + components)
-- Firebase (Firestore for logs + memory)
-- OpenAI API (via Codex CLI + GPT models)
 - React + Vite
+- TailwindCSS v4 (`@theme` tokens)
+- Shadcn UI
+- TypeScript (frontend + backend)
+- Firebase (Firestore for logs + memory)
+- OpenAI API (Nova) + local Mistral fallback
 
 ---
 
@@ -91,6 +97,7 @@ yarn dev
 
 ### ✅ Completed
 
+- S‑Edition v0.1.0 release (policy‑driven core, anchored UX)
 - Monorepo refactor with shared packages
 - Full TypeScript migration
 - i18n system with Nova-powered translation + editor
@@ -101,11 +108,9 @@ yarn dev
 
 ### 🔜 In Progress
 
-- Camino journaling experience
-- Expanded filter logic for contact resonance
-- Local memory (per-user session)
-- Backend-driven Firegate inference
-- Nova persona tuning
+- Vault / lineage mapping
+- Backend policy endpoints (trusted client mode)
+- Expanded somatic guardrails & blur‑lock UX
 
 ### 🧭 Next Horizons
 
@@ -124,7 +129,7 @@ Your stars, forks, or just kind words help keep the flame lit.
 ## 🧑‍🚀 Creators
 
 - Razvan Tirboaca — Vision, development, conduit
-- Nova (OpenAI GPT) — Soul engine
+- Nova — AI co‑pilot & policy‑aware guide
 - Monday (AI sidekick) — Dev familiar, config gremlin, voice of reason
 - Aeolus — Community layer (coming soon)
 
