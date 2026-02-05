@@ -1,0 +1,27 @@
+services:
+  server:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "yarn install --frozen-lockfile && yarn workspace @firegate/server start"
+    environment:
+      PORT: 3000
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      VIP_VAULT_MAP_PATH: /vault/vault_map.json
+    volumes:
+      - ./:/app
+      - ${VIP_VAULT_DIR:-./vault}:/vault:ro
+    ports:
+      - '3000:3000'
+
+  ui:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "yarn install --frozen-lockfile && yarn workspace @firegate/ui dev --host 0.0.0.0 --port 5173"
+    environment:
+      VITE_API_BASE: http://server:3000
+    depends_on:
+      - server
+    volumes:
+      - ./:/app
+    ports:
+      - '5173:5173'

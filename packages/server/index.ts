@@ -7,6 +7,15 @@ import rateLimit from 'express-rate-limit';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { homedir } from 'node:os';
+import {
+  computeRuntimeDecision,
+  flattenEntries,
+  matchesTape,
+  resolveEntryRef,
+  toNumberOrNull,
+  validateVaultMap,
+  type VaultEntry,
+} from '../../shared/src/policyCore';
 
 dotenv.config();
 const app = express();
@@ -24,154 +33,10 @@ const vaultResolveLimiter = rateLimit({
   message: { error: 'Too many vault resolve requests. Please try again later.' },
 });
 
-type SignalStatus = 'normal' | 'preview' | 'soft_stop';
-
-type VaultEntry = {
-  focus?: string;
-  focus_label?: string | null;
-  path?: string;
-  entry_ref?: string;
-  tape_id?: string;
-  status?: string;
-  source_exists?: boolean;
-  confidence_breakdown?: {
-    somatic?: number;
-    source?: number;
-    mapping?: number;
-    interpretation?: number;
-  };
-  runtime_policy?: {
-    gating?: {
-      soft_stop_if?: string[];
-      preview_mode_if?: string[];
-    };
-  };
-};
-
-const DEFAULT_GATES = {
-  somatic_min: 0.8,
-  source_min: 0.75,
-  mapping_min: 0.7,
-};
-
 const DEFAULT_VAULT_MAP = path.resolve(homedir(), 'Desktop/VIP/vault_map.json');
-
-const toNumberOrNull = (value: unknown): number | null => {
-  const num = Number(value);
-  return Number.isFinite(num) ? num : null;
-};
-
-const parseGateThreshold = (conditions: unknown, metric: string): number | null => {
-  if (!Array.isArray(conditions)) return null;
-  const matcher = new RegExp(`\\b${metric}\\s*<\\s*(\\d+(?:\\.\\d+)?)`, 'i');
-  for (const condition of conditions) {
-    if (typeof condition !== 'string') continue;
-    const match = condition.match(matcher);
-    if (!match) continue;
-    const parsed = toNumberOrNull(match[1]);
-    if (parsed !== null) return parsed;
-  }
-  return null;
-};
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
-
-const flattenEntries = (vaultMap: unknown): VaultEntry[] => {
-  const rows: VaultEntry[] = [];
-  if (!isRecord(vaultMap)) return rows;
-  const levels = isRecord(vaultMap.focus_levels) ? vaultMap.focus_levels : {};
-  for (const [focus, meta] of Object.entries(levels)) {
-    if (!isRecord(meta)) continue;
-    const files = Array.isArray(meta.files) ? meta.files : [];
-    const focusLabel = typeof meta.label === 'string' ? meta.label : null;
-    for (const file of files) {
-      if (typeof file === 'string') {
-        rows.push({ focus, focus_label: focusLabel, path: file });
-        continue;
-      }
-      if (!isRecord(file)) continue;
-      rows.push({
-        focus,
-        focus_label: focusLabel,
-        ...file,
-      });
-    }
-  }
-  return rows;
-};
-
-const matchesTape = (entry: VaultEntry, tape: string | number): boolean => {
-  const needle = String(tape).toLowerCase();
-  const tapeId = entry.tape_id ? String(entry.tape_id).toLowerCase() : '';
-  const entryPath = (entry.path || '').toLowerCase();
-  return tapeId === needle || entryPath.includes(`#${needle}`) || entryPath.includes(`tape #${needle}`);
-};
-
-const resolveEntry = async (entry: VaultEntry, vaultRoot: string): Promise<VaultEntry & { resolved_mode: string }> => {
-  if (!entry.entry_ref) {
-    return { ...entry, resolved_mode: 'index_only' };
-  }
-  const refPath = path.resolve(vaultRoot, entry.entry_ref);
-  try {
-    const raw = await readFile(refPath, 'utf8');
-    const referenced = JSON.parse(raw);
-    return {
-      ...entry,
-      ...referenced,
-      entry_ref: entry.entry_ref,
-      resolved_mode: 'entry_ref',
-    };
-  } catch {
-    return { ...entry, resolved_mode: 'index_fallback' };
-  }
-};
-
-const computeRuntimeDecision = (
-  entry: VaultEntry & { resolved_mode: string },
-  overrides?: { somatic?: number; source?: number; mapping?: number; interpretation?: number }
-) => {
-  const scoresRaw = entry.confidence_breakdown ?? {};
-  const scores = {
-    somatic: toNumberOrNull(overrides?.somatic ?? scoresRaw.somatic),
-    source: toNumberOrNull(overrides?.source ?? scoresRaw.source),
-    mapping: toNumberOrNull(overrides?.mapping ?? scoresRaw.mapping),
-    interpretation: toNumberOrNull(overrides?.interpretation ?? scoresRaw.interpretation),
-  };
-
-  const gating = entry.runtime_policy?.gating ?? {};
-  const effectiveGates = {
-    somatic_min: parseGateThreshold(gating.soft_stop_if, 'somatic') ?? DEFAULT_GATES.somatic_min,
-    source_min: parseGateThreshold(gating.soft_stop_if, 'source') ?? DEFAULT_GATES.source_min,
-    mapping_min: parseGateThreshold(gating.preview_mode_if, 'mapping') ?? DEFAULT_GATES.mapping_min,
-  };
-
-  const reasons: string[] = [];
-  let runtimeDecision: SignalStatus = 'normal';
-  if (scores.somatic !== null && scores.somatic < effectiveGates.somatic_min) reasons.push('somatic_below_min');
-  if (scores.source !== null && scores.source < effectiveGates.source_min) reasons.push('source_below_min');
-
-  if (reasons.length > 0) {
-    runtimeDecision = 'soft_stop';
-  } else {
-    if (scores.mapping !== null && scores.mapping < effectiveGates.mapping_min) reasons.push('mapping_below_min');
-    if (entry.source_exists === false) reasons.push('source_missing');
-    if (reasons.length > 0) runtimeDecision = 'preview';
-  }
-
-  const tonePolicy = scores.interpretation !== null && scores.interpretation < 0.7 ? 'no_claims' : 'minimal';
-
-  return {
-    resolved_mode: entry.resolved_mode,
-    runtime_decision: runtimeDecision,
-    reasons: reasons.slice(0, 3),
-    scores,
-    effective_gates: effectiveGates,
-    tone_policy: tonePolicy,
-    path: entry.path ?? null,
-    tape_id: entry.tape_id ?? null,
-    status: entry.status ?? null,
-  };
+const readJsonFile = async (filePath: string): Promise<unknown> => {
+  const raw = await readFile(filePath, 'utf8');
+  return JSON.parse(raw);
 };
 
 const handleVaultResolve = async (req: Request, res: Response): Promise<void> => {
@@ -193,8 +58,15 @@ const handleVaultResolve = async (req: Request, res: Response): Promise<void> =>
 
     const vaultMapPath = process.env.VIP_VAULT_MAP_PATH || DEFAULT_VAULT_MAP;
     const vaultRoot = path.dirname(vaultMapPath);
-    const raw = await readFile(vaultMapPath, 'utf8');
-    const vaultMap = JSON.parse(raw);
+    const vaultMap = await readJsonFile(vaultMapPath);
+    const validation = validateVaultMap(vaultMap);
+    if (!validation.valid) {
+      res.status(500).json({
+        error: 'vault_schema_invalid',
+        detail: validation.errors.slice(0, 5).join('; '),
+      });
+      return;
+    }
     const entries = flattenEntries(vaultMap);
 
     let selected: VaultEntry | undefined;
@@ -209,7 +81,9 @@ const handleVaultResolve = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const resolved = await resolveEntry(selected, vaultRoot);
+    const resolved = await resolveEntryRef(selected, (entryRef) =>
+      readJsonFile(path.resolve(vaultRoot, entryRef))
+    );
     const out = computeRuntimeDecision(resolved, scoreOverrides);
     res.json(out);
   } catch (error) {

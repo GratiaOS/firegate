@@ -1,6 +1,11 @@
 {
   "speakPlaceholder": "Una frase: ¿qué sientes en el cuerpo? Luego: un paso pequeño hoy.",
   "breatheFirst": "Respira primero.",
+  "entryGateTitle": "Entrada lenta.",
+  "entryGateSubtitle": "Este espacio se abre con presencia, no con prisa.",
+  "entryGateHold": "Mantén pulsado para entrar",
+  "entryGateBlocked": "Demasiado rápido. Respira. Inténtalo otra vez, más lento.",
+  "entryGateAxeDown": "Hacha abajo. Pausa un momento y vuelve.",
   "languageSelect": "Elegir idioma",
   "firegateTitle": "🌀 Firegate: Interfaz Nova",
 
