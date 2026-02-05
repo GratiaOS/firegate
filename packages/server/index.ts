@@ -15,7 +15,7 @@ import {
   toNumberOrNull,
   validateVaultMap,
   type VaultEntry,
-} from '../../shared/src/policyCore';
+} from '../../shared/src/policyCore.js';
 
 dotenv.config();
 const app = express();
