@@ -1,6 +1,7 @@
 {
   "name": "@firegate/shared",
   "version": "0.1.0",
+  "type": "module",
   "main": "src/index.js",
   "private": true,
   "dependencies": {}

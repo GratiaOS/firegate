@@ -82,6 +82,30 @@ yarn dev
 - Make sure Ollama is installed
 - Run the Mistral model locally: ollama run mistral
 
+## 🧱 Self-Host Quickstart (15 min)
+
+Firegate supports a local-first self-host path.
+
+```bash
+cp .env.selfhost.example .env
+# edit .env and set VIP_VAULT_DIR + OPENAI_API_KEY
+make up
+```
+
+Useful commands:
+
+```bash
+make logs     # tail server + ui logs
+make down     # stop stack
+make backup   # export .fgpack archive from your VIP vault
+make verify   # verify .fgpack integrity
+```
+
+References:
+
+- Meaning blueprint: [MEANING_INFRASTRUCTURE_BLUEPRINT.md](MEANING_INFRASTRUCTURE_BLUEPRINT.md)
+- Archive format: [docs/fgpack.md](docs/fgpack.md)
+
 ## 🔮 Live Features
 
 - Nova: AI co-pilot + journaling agent

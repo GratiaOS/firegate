@@ -1,6 +1,11 @@
 {
   "speakPlaceholder": "One sentence: what do you feel in your body? Then: one small step today.",
   "breatheFirst": "Breathe first.",
+  "entryGateTitle": "Slow entry.",
+  "entryGateSubtitle": "This space opens with presence, not speed.",
+  "entryGateHold": "Press and hold to enter",
+  "entryGateBlocked": "Too fast. Breathe. Try again slowly.",
+  "entryGateAxeDown": "Axe down. Pause a moment, then return.",
   "languageSelect": "Choose language",
   "firegateTitle": "🌀 Firegate: Nova Interface",
 

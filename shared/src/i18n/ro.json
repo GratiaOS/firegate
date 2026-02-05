@@ -1,6 +1,11 @@
 {
   "speakPlaceholder": "O frază: ce simți în corp? Apoi: un pas mic azi.",
   "breatheFirst": "Respiră întâi.",
+  "entryGateTitle": "Intrare lentă.",
+  "entryGateSubtitle": "Spațiul se deschide prin prezență, nu prin viteză.",
+  "entryGateHold": "Apasă și ține apăsat pentru a intra",
+  "entryGateBlocked": "Prea repede. Respiră. Încearcă din nou, mai lent.",
+  "entryGateAxeDown": "Topor jos. Fă o pauză și revino.",
   "languageSelect": "Alege limba",
   "firegateTitle": "🌀 Firegate: Interfața Nova",
 

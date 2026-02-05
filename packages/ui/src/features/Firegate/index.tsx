@@ -36,6 +36,7 @@ import rehypeHighlight from 'rehype-highlight';
 import { useLang } from '@shared/LangContext';
 import { useNovaTranslate } from '@/hooks/useNovaTranslate';
 import RecentLogsDrawer from '@/components/RecentLogsDrawer';
+import { DEFAULT_GATES } from '@shared/policyCore';
 import {
   somaticFlagsFromText,
   SHOUT_RATIO_THRESHOLD,
@@ -43,6 +44,7 @@ import {
 } from './lib/somatic';
 import { StaticGrainOverlay } from './components/StaticGrainOverlay';
 import { SignalQuality, type SignalStatus } from './components/SignalQuality';
+import { MembraneGate } from './components/MembraneGate';
 import somaticContent from './somatic_content.json';
 
 interface ChatMessage {
@@ -84,7 +86,7 @@ const HOLD_TO_RETURN_MS = 1200;
 const HIGH_STATIC_THRESHOLD = SHOUT_RATIO_THRESHOLD;
 const GRAIN_OPACITY_LOW = 0.03;
 const GRAIN_OPACITY_HIGH = SHOUT_STATIC_LEVEL / 10;
-const SOFT_STOP_SOMATIC_MIN = 0.8;
+const SOFT_STOP_SOMATIC_MIN = DEFAULT_GATES.somatic_min;
 
 const cityTagsByLang: Record<string, string[]> = {
   ro: ['corp', 'pas', 'claritate', 'azi'],
@@ -111,6 +113,7 @@ const Firegate: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
   const [recentLogs, setRecentLogs] = useState<RecentLog[]>([]);
+  const [isEntryGranted, setIsEntryGranted] = useState<boolean>(false);
   const [isSomaticNoisy, setIsSomaticNoisy] = useState<boolean>(false);
   const [somaticStaticLevel, setSomaticStaticLevel] = useState<number>(0);
   const [runtimeDecision, setRuntimeDecision] = useState<SignalStatus>('normal');
@@ -537,6 +540,19 @@ const Firegate: FC = () => {
       setTipCursor((prev) => prev + 1);
     }
   }, [signalStatus, policyTrace?.runtime_decision]);
+
+  if (!isEntryGranted) {
+    return (
+      <MembraneGate
+        title={labels.entryGateTitle}
+        subtitle={labels.entryGateSubtitle}
+        holdHint={labels.entryGateHold}
+        blockedText={labels.entryGateBlocked}
+        axeDownText={labels.entryGateAxeDown}
+        onGranted={() => setIsEntryGranted(true)}
+      />
+    );
+  }
 
   return (
     <div className={`flex flex-col h-full ${isNoisy ? 'fg-powerdown' : ''}`}>
